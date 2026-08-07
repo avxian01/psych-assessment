@@ -1,0 +1,2938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSY 081 - P1</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@400;600;700&family=Lexend:wght@400;600;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- Canvas Confetti Library -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+:root {
+    --base-font-scale: 100%;
+    --app-font: 'Poppins', sans-serif;
+}
+
+html {
+    font-size: var(--base-font-scale);
+}
+
+* {
+    box-sizing: border-box;
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
+}
+
+body {
+    font-family: var(--app-font);
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f8fafc;
+}
+
+/* Glassmorphism Container Card */
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 650px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+}
+
+@media (min-width: 640px) {
+    .container {
+        padding: 32px;
+    }
+}
+
+/* Top Header Bar */
+.top-nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+/* Navigation/Icon Buttons */
+.icon-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+/* Options / Settings Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+}
+
+.modal-content {
+    background: #1e1b4b;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 24px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 12px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+.setting-group {
+    margin-bottom: 18px;
+}
+
+.setting-group label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    color: #c7d2fe;
+}
+
+.setting-control {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: #ffffff;
+    outline: none;
+    font-family: inherit;
+}
+
+.setting-control option {
+    background: #1e1b4b;
+    color: #ffffff;
+}
+
+.toggle-switch-btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* Progress Bar Styling */
+.progress-container {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    height: 8px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #818cf8 0%, #c084fc 100%);
+    border-radius: 10px;
+    transition: width 0.4s ease-in-out;
+    box-shadow: 0 0 10px rgba(192, 132, 252, 0.5);
+}
+
+/* Quiz Header Bar */
+.quiz-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#bookmarkBtn.bookmarked {
+    background: rgba(245, 158, 11, 0.3);
+    border-color: #f59e0b;
+}
+
+/* Streak Counter Styling */
+.streak-badge {
+    background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 0 12px rgba(249, 115, 22, 0.4);
+    animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+h2 {
+    margin-top: 0;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    text-align: center;
+}
+
+h3#questionNumber {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #818cf8;
+    margin: 0;
+}
+
+h2#questionText {
+    font-size: 1.15rem;
+    text-align: left;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* Action Buttons & Inputs */
+button, select {
+    font-family: inherit;
+    font-weight: 500;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 0.88rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+button:hover:not(:disabled), select:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+button:disabled {
+    cursor: default;
+    opacity: 0.9;
+}
+
+/* Option Items */
+.answer {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.answer:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(129, 140, 248, 0.5);
+}
+
+/* Highlight Colors */
+.correct {
+    background: rgba(59, 130, 246, 0.35) !important;
+    border-color: #60a5fa !important;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
+}
+
+.correct-answer {
+    background: rgba(34, 197, 94, 0.35) !important;
+    border-color: #4ade80 !important;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(74, 222, 128, 0.4);
+}
+
+.wrong {
+    background: rgba(239, 68, 68, 0.35) !important;
+    border-color: #f87171 !important;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(248, 113, 113, 0.4);
+}
+
+.hidden {
+    display: none !important;
+}
+
+#notesBox {
+    margin-top: 20px;
+    padding: 18px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    border-left: 4px solid #818cf8;
+    line-height: 1.6;
+    white-space: pre-line;
+    font-size: 0.95rem;
+}
+
+/* Pure Note Card Styles */
+.pure-note-card {
+    background: rgba(14, 165, 233, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-left: 4px solid #38bdf8;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.pure-note-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.pure-note-content {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #f8fafc;
+    white-space: pre-line;
+}
+
+#startScreen {
+    text-align: center;
+}
+
+.start-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.category-select-box {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    outline: none;
+    color: #ffffff;
+}
+
+.category-select-box option {
+    background: #1e1b4b;
+    color: #ffffff;
+}
+
+#startScreen button.start-action-btn {
+    width: 100%;
+    margin: 6px 0;
+    padding: 14px;
+    font-size: 0.95rem;
+    background: rgba(99, 102, 241, 0.3);
+    border-color: rgba(129, 140, 248, 0.4);
+}
+
+#startScreen button.start-action-btn:hover {
+    background: rgba(99, 102, 241, 0.5);
+}
+
+#resumeBtn {
+    background: rgba(34, 197, 94, 0.3) !important;
+    border-color: #4ade80 !important;
+    font-weight: 600;
+}
+
+#scoreScreen {
+    text-align: center;
+}
+
+#scoreScreen button {
+    width: 100%;
+    margin: 6px 0;
+    padding: 12px;
+}
+
+.analytics-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px;
+    margin: 18px 0;
+    text-align: left;
+}
+
+.analytics-card h4 {
+    margin: 0 0 12px 0;
+    font-size: 0.9rem;
+    color: #818cf8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.analytics-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+}
+
+/* Review Card and Notes CSS */
+.review-card {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.review-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.review-q-text {
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 16px;
+    color: #ffffff;
+    line-height: 1.5;
+    white-space: pre-line;
+}
+
+.review-ans-row {
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.review-notes {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 4px solid #818cf8;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+.navigation-btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.action-btns {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-left: auto;
+}
+
+#nextBtn {
+    background: rgba(99, 102, 241, 0.4);
+    border-color: #818cf8;
+}
+
+#nextBtn:hover {
+    background: rgba(99, 102, 241, 0.6);
+}
+
+.watermark {
+    text-align: center;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.35);
+    margin-top: 20px;
+    letter-spacing: 1px;
+    font-weight: 400;
+    user-select: none;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Start Screen / Quiz Mode Panel -->
+    <div id="startScreen">
+        <div class="start-header">
+            <div style="width: 38px;"></div>
+            <h2 style="font-size: 1.8rem; margin: 0;">Quiz Mode</h2>
+            <button type="button" class="icon-btn" onclick="openSettingsModal()" title="Options / Settings">⚙️</button>
+        </div>
+
+        <button type="button" id="resumeBtn" class="start-action-btn hidden" onclick="resumeQuiz()">▶ Resume Progress</button>
+
+        <select id="categorySelect" class="category-select-box">
+            <option value="All">All Categories</option>
+        </select>
+
+        <button type="button" class="start-action-btn" onclick="startQuiz(false)">Orderly Questions</button>
+        <button type="button" class="start-action-btn" onclick="startQuiz(true)">Randomized Questions & Answers</button>
+
+        <div class="watermark">@avxianx</div>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quizScreen" class="hidden">
+        <div class="top-nav-bar">
+            <button type="button" class="icon-btn" onclick="goHome()" title="Home">
+                <span>🏠</span>
+                <span>Home</span>
+            </button>
+            <span id="streakBadge" class="streak-badge hidden">🔥 0 in a row!</span>
+        </div>
+
+        <div class="progress-container">
+            <div id="progressFill" class="progress-fill"></div>
+        </div>
+
+        <div class="quiz-header-bar">
+            <div class="header-left">
+                <h3 id="questionNumber"></h3>
+                <button type="button" id="bookmarkBtn" class="icon-btn" onclick="toggleBookmark()" title="Bookmark Question">📍</button>
+            </div>
+        </div>
+
+        <div id="quizContentArea">
+            <h2 id="questionText"></h2>
+            <div id="answers"></div>
+        </div>
+
+        <div class="navigation-btns">
+            <button type="button" id="prevBtn" class="hidden" onclick="prevQuestion()">◄ Back</button>
+            <div class="action-btns">
+                <button type="button" id="notesBtn" class="hidden">Notes</button>
+                <button type="button" id="nextBtn" class="hidden">Next Question ►</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notes Screen -->
+    <div id="notesScreen" class="hidden">
+        <h2>Notes & Explanation</h2>
+        <div id="notesBox"></div>
+        <br>
+        <button type="button" onclick="backToQuestion()">Back to Quiz</button>
+    </div>
+
+    <!-- Detailed Answers Review Screen -->
+    <div id="detailedReviewScreen" class="hidden">
+        <h2 id="detailedReviewTitle">Detailed Review</h2>
+        <p id="detailedReviewSubtitle" style="text-align: center; color: #c7d2fe; font-size: 0.88rem; margin-bottom: 16px;">Review your answers and detailed notes for each question:</p>
+        
+        <select id="reviewCategoryFilter" class="category-select-box" onchange="renderDetailedReviewCards()">
+            <option value="All">All Categories</option>
+        </select>
+
+        <div id="detailedReviewContainer" style="max-height: 68vh; overflow-y: auto; padding-right: 6px;"></div>
+
+        <button type="button" onclick="backToScoreScreen()" style="width: 100%; margin-top: 16px; background: rgba(99, 102, 241, 0.4); border-color: #818cf8;">Back to Results Screen</button>
+    </div>
+
+    <!-- Score / Results Screen -->
+    <div id="scoreScreen" class="hidden">
+        <h2 id="scoreHeaderTitle">Quiz Finished!</h2>
+        <h3 id="scoreText" style="font-size: 1.5rem; color: #818cf8; margin: 15px 0;"></h3>
+
+        <div id="analyticsCard" class="analytics-card">
+            <h4>Performance Breakdown</h4>
+            <div id="analyticsList"></div>
+        </div>
+
+        <button type="button" id="reviewAllAnswersBtn" onclick="showDetailedReview('answers')" style="background: rgba(99, 102, 241, 0.35); border-color: #818cf8; font-weight: 600;">Review All Answers</button>
+        <button type="button" id="reviewAllNotesBtn" onclick="showDetailedReview('notes')" style="background: rgba(14, 165, 233, 0.35); border-color: #38bdf8; font-weight: 600;">Review All Notes</button>
+        <button type="button" id="retakeAllBtn" onclick="restartQuiz()">Retake All Questions</button>
+        <button type="button" id="retakeWrongBtn" class="hidden" onclick="retakeWrongQuestions()">Retake Wrong Only</button>
+        <button type="button" id="reviewBookmarkedBtn" class="hidden" onclick="reviewBookmarkedQuestions()">Review Bookmarked</button>
+        <button type="button" onclick="goHome()" style="background: rgba(255, 255, 255, 0.08); margin-top: 10px;">🏠 Back to Home</button>
+    </div>
+
+</div>
+
+<!-- Options / Settings Modal -->
+<div id="settingsModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>⚙️ Quiz Options</h3>
+        </div>
+        
+        <div class="setting-group">
+            <label for="fontSizeSelect">Font Size:</label>
+            <select id="fontSizeSelect" class="setting-control" onchange="changeFontSize(this.value)">
+                <option value="85%">Small</option>
+                <option value="100%" selected>Normal</option>
+                <option value="115%">Large</option>
+                <option value="130%">Extra Large</option>
+            </select>
+        </div>
+
+        <div class="setting-group">
+            <label for="fontFamilySelect">Font Style:</label>
+            <select id="fontFamilySelect" class="setting-control" onchange="changeFontFamily(this.value)">
+                <option value="'Poppins', sans-serif" selected>Poppins</option>
+                <option value="'Inter', sans-serif">Inter</option>
+                <option value="'Roboto', sans-serif">Roboto</option>
+                <option value="'Montserrat', sans-serif">Montserrat</option>
+                <option value="'Open Sans', sans-serif">Open Sans</option>
+                <option value="'Lexend', sans-serif">Lexend</option>
+                <option value="'Courier Prime', monospace">Monospace (Courier)</option>
+            </select>
+        </div>
+
+        <div class="setting-group">
+            <label>Sound Effects:</label>
+            <button type="button" id="soundToggleModalBtn" class="toggle-switch-btn" onclick="toggleSound()">
+                <span>Sound Effects</span>
+                <span id="soundStatusText">ON 🔊</span>
+            </button>
+        </div>
+
+        <button type="button" onclick="closeSettingsModal()" style="width: 100%; margin-top: 10px; background: rgba(129, 140, 248, 0.4); border-color: #818cf8;">Close Options</button>
+    </div>
+</div>
+
+<script>
+
+let questions = [
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Earliest known civil service testing system for selection and decision-making.",
+    answers: ["Han Dynasty", "East India Company", "China", "Ming Dynasty"],
+    correct: "China",
+    notes: "The history of psychological testing began in ancient CHINA over 4,000 YEARS AGO. The Chinese used a detailed CIVIL SERVICE TESTING SYSTEM for selection and decision-making.\n\nExample:\nBefore the emperor hired someone for a government job, applicants had to go through tests and evaluations to prove they were actually qualified.\n\nOral Examinations Every Three Years:\nGovernment employees took verbal or oral tests every three years.\nPurpose: Used for WORK EVALUATION and PROMOTION DECISIONS."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Introduced the Test Battery (combining two or more tests).",
+    answers: ["Han Dynasty", "East India Company", "China", "Ming Dynasty"],
+    correct: "Han Dynasty",
+    notes: "Noong Han Dynasty, sinimulan sa civil service testing system ng China ang paggamit ng magkakasamang iba't ibang tests.\n\nTEST BATTERY\nIbig sabihin: Paggamit ng dalawa o higit pang tests nang magkasama (two or more tests combined) sa halip na umaasa lang sa single test.\n\nBakit mahalaga: Kapag single test lang ang ginamit, limited or incomplete information ang makukuha mo. Kapag nag-gather ka ng data from multiple sources, mas nagiging malinaw at kumpleto ang picture ng overall abilities ng isang tao.\n\nModern Application: Ito ang naging basehan ng psychological assessment ngayon—bihira nang gumamit ang mga psychologist ng iisang test lang; gumagamit sila ng test battery (halimbawa: IQ test + personality test + interview) para i-evaluate ang isang tao."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Used testing booths as a multi-stage Filtering System.",
+    answers: ["Han Dynasty", "East India Company", "China", "Ming Dynasty"],
+    correct: "Ming Dynasty",
+    notes: "Noong Ming Dynasty, ginawa nilang mas mahigpit at multi-level yung testing para sa mga gustong pumasok sa government.\n\nMULTISTAGE FILTERING SYSTEM\n• What it means: Isa itong nationwide system na may iba't ibang levels of exam na kailangang ipasa ng applicants bago sila ma-hire.\n• Main Purpose: Ginawa ito bilang FILTERING SYSTEM para ma-screen nang maayos ang mga tao at makuha lang yung pinaka-qualified.\n• Why it matters in Psych Assessment: Dito nag-start lumabas yung important questions regarding testing:\nFAIRNESS: Fair ba talaga yung standards para sa lahat ng nag-a-apply?\nJOB RELEVANCE: Connected at relevant ba talaga yung exam questions sa mismong trabaho?"
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Adopted China's testing model for employee recruitment.",
+    answers: ["Han Dynasty", "East India Company", "China", "Ming Dynasty"],
+    correct: "East India Company",
+    notes: "ENGLISH EAST INDIA COMPANY\nNa-inspire ang British company na 'to sa testing system ng China, kaya ginaya nila ito para sa pag-select ng sarili nilang employees.\n\nCULTURAL TRANSFER\nWhat it means: Ang pagkuha o pag-adopt ng isang testing system mula sa isang bansa/kultura at pag-apply nito sa ibang kultura.\nMain Purpose: Ginamit ng company ang system na 'to para magkaroon ng mas structured at objective na paraan ng pagpili ng staff.\nWhy it matters in Psych Assessment: Dito nag-start ang issue tungkol sa CULTURAL FAIRNESS:\n- ADAPTABILITY: Kapag ang test ay galing sa ibang kultura, gagana pa rin ba ito nang maayos sa ibang grupo ng tao?\n- BIAS: Baka maging unfair o biased ang test kapag hindi ito na-adjust sa kultura ng mga bagong kukuha ng exam."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Published On the Origin of Species; concept of Individual Differences formed the basis for psychological testing.",
+    answers: ["James McKeen Cattell", "Charles Darwin", "Sir Francis Galton", "Ernst Heinrich Weber"],
+    correct: "Charles Darwin",
+    notes: "CHARLES DARWIN\nKahit hindi siya psychologist, malaki ang naging epekto ng evolutionary theory ni Charles Darwin sa larangan ng psychological testing.\n\nINDIVIDUAL DIFFERENCES\nWhat it means: Ang pag-aaral kung bakit magkakaiba ang mga tao sa kanilang traits, abilities, at characteristics.\nMain Idea: Sa theory ni Darwin na natural selection, pinalabas niya na ang mga species ay may individual variation—may mga katangian ang ilang indibidwal na nakakatulong sa kanila para mag-adapt at ma-survive ang environment.\n\nPractical Example:\nScenario: Sa isang kumpanya, dalawang aplikante ang binigyan ng bagong software. Ang isa ay mabilis matuto (high adaptability), habang ang isa ay nahihirapan mag-adjust.\nApplication: Ipinapakita nito kung paano nagkakaiba-iba ang kakayahan ng tao na mag-adapt sa pagbabago sa kanilang paligid.\n\nCFE Must-Know Highlights\n- Scientific Basis: Dahil sa kaniya, na-realize ng mga scientists na mahalagang i-measure at i-quantify ang pagkakaiba-iba ng tao.\n- Inspiration: Ang mga ideya niya ang nag-inspire sa pinsan niyang si Francis Galton para simulan ang kauna-unahang scientific testing sa mga tao."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Studied individual variations in Sensory and Motor functioning (reaction time, visual acuity, physical strength).",
+    answers: ["James McKeen Cattell", "Charles Darwin", "Sir Francis Galton", "Ernst Heinrich Weber"],
+    correct: "Sir Francis Galton",
+    notes: "SIR FRANCIS GALTON\nPinsan siya ni Charles Darwin at kilala bilang Father of Mental Testing. Siya ang kauna-unahang nag-try na mag-measure ng individual differences ng tao sa scientific na paraan.\n\nINDIVIDUAL DIFFERENCES & HEREDITARY GENIUS\nWhat it means: Naniwala siya na ang intelligence at abilities ng tao ay mostly inherited o namamana sa mga magulang.\nMain Contribution: Nagtayo siya ng Anthropometric Laboratory kung saan nag-collect siya ng physical at sensory data ng libo-libong tao (halimbawa: reaction time, visual acuity, at arm span).\n\nPractical Example:\nScenario: Sinusukat ang bilis ng pag-pindot ng tao sa button kapag nakakita ng ilaw (reaction time) o kung gaano kahina na tunog ang kaya niyang marinig.\nApplication: Naniniwala si Galton na kapag mas mabilis ang reflex at mas matalas ang senses mo, mas mataas ang intellectual capacity mo.\n\nCFE Must-Know Highlights\n- Sensory Motor Focus: Naniwala siya na ang tao na may mas matalas na senses ay mas matalino.\n- Statistical Tools: Siya ang nag-introduce ng mga batayang statistical concept na ginagamit sa testing, tulad ng correlation (sa tulong ni Karl Pearson) at percentiles.\n- Father of Mental Testing: Ang kauna-unahang nagdisenyo ng mga pamamaraan para sukatin ang kakayahan ng tao sa laboratory setting."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Coined the term \"Mental Test\" in 1890.",
+    answers: ["James McKeen Cattell", "Charles Darwin", "Sir Francis Galton", "Ernst Heinrich Weber"],
+    correct: "James McKeen Cattell",
+    notes: "JAMES MCKEEN CATTELL\nIsa siyang American psychologist na nag-aral sa ilalim nina Wilhelm Wundt at Francis Galton. Siya ang nagdala ng mga ideya ng testing mula sa Europe papuntang United States.\n\nMENTAL TEST\nWhat it means: Siya ang kauna-unahang nag-coin o gumamit ng mismong term na \"Mental Test\" sa psychological literature noong 1890.\nMain Contribution: Nag-develop siya ng series ng tests para sa mga college students para i-measure ang kanilang memory, sensory motor skills, at reaction time.\n\nPractical Example:\nScenario: Pagpapatest sa isang estudyante kung ilang numero ang kaya niyang maalaala agad o kung gaano kadiin ang kaya niyang itulak gamit ang kaniyang kamay (dynamometer).\nApplication: Ginamit ito sa mga papasok na college students para subukang prediksyunan ang kaniyang academic performance.\n\nCFE Must-Know Highlights\n- Coined \"Mental Test\": Ang pinakamahalagang keyword na nakakabit sa pangalan niya sa mga board exams.\n- Popularization: Siya ang nag-promote na gamitin ang psychological testing sa practical applications, lalo na sa education at selection sa America."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Investigated the Psychological Threshold (minimum stimulus to evoke a sensory response).",
+    answers: ["Guy Montrose Whipple", "Gustav Theodor Fechner", "Wilhelm Wundt", "Ernst Heinrich Weber"],
+    correct: "Ernst Heinrich Weber",
+    notes: "ERNST HEINRICH WEBER\nIsa siyang German physician at anatomist na itinuturing na isa sa mga founders ng experimental psychology at psychophysics.\n\nJUST NOTICEABLE DIFFERENCE (JND)\nWhat it means: Ang pinakamaliit na pagbabago sa isang stimulus (halimbawa: bigat, liwanag, o tunog) na kayang mapansin o ma-detect ng isang tao.\nMain Contribution: Dinisenyo niya ang Weber's Law, kung saan ipinakita niya na ang JND ay hindi nakadepende sa absolute amount ng pagbabago, kundi sa constant proportion o ratio nito sa original stimulus.\n\nPractical Example:\nScenario: Kapag hawak mo ang isang 1 kg na bag, madali mong mapapansin kung dadagdagan ito ng 100 grams. Pero kapag hawak mo ay 50 kg na sako, hindi mo mapapansin ang dagdag na 100 grams—kailangan ng mas malaking bawas o dagdag para mapansin mo ang pagkakaiba.\nApplication: Ipinapakita nito kung paano gumagana ang sensory discrimination ng tao.\n\nCFE Must-Know Highlights\n- Just Noticeable Difference (JND): Ang pinakamaliit na pagkakaiba sa stimulus na kayang ma-detect ng perception ng tao.\n- Quantifying Mind & Senses: Ipinakita niya na pwedeng i-measure mathematically ang ugnayan ng physical world at ng mental experience."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Founded Psychophysics (mathematical relationship between physical stimuli and psychological sensations).",
+    answers: ["Guy Montrose Whipple", "Gustav Theodor Fechner", "Wilhelm Wundt", "Ernst Heinrich Weber"],
+    correct: "Gustav Theodor Fechner",
+    notes: "GUSTAV THEODOR FECHNER\nIsa siyang German physicist at philosopher na nagpaitaas sa mga ginawa ni Weber. Siya ang itinuturing na Father of Psychophysics.\n\nPSYCHOPHYSICS\nWhat it means: Ang pag-aaral sa ugnayan ng physical stimuli (mga bagay sa labas tulad ng liwanag o tunog) at ng psychological sensation (kung paano natin ito nararamdaman o na-pe-perceive).\nMain Contribution: Binuo niya ang Fechner's Law (na na-inspire sa Weber's Law). Ipinakita niya rito na habang lumalaki nang lumalaki ang intensity ng isang physical stimulus, mas nagiging mabagal na ang pagtaas ng nararamdaman nating sensation.\n\nPractical Example:\nScenario: Sa isang madilim na silid, ang pagsindi ng isang kandila ay magmumukhang napakaliwanag. Pero kung sisindi ka ng kandila sa ilalim ng matinding sikat ng araw, halos hindi mo mararamdaman ang dagdag na liwanag.\nApplication: Sinusukat dito ang ugnayan ng physical intensity ng bagay at ng subjective mental perception ng tao.\n\nCFE Must-Know Highlights\n- Father of Psychophysics: Ang nagtatag ng disiplinang nag-uugnay sa physical stimulus at mental experience.\n- First Mental Measurement: Napatunayan niya na ang mental processes at subjective feelings ng tao ay pwedeng i-measure sa mathematical na paraan."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Established the first formal Psychology Laboratory in Leipzig, Germany.",
+    answers: ["Guy Montrose Whipple", "Emil Kraepelin", "Wilhelm Wundt", "Seguin Form Board Test"],
+    correct: "Wilhelm Wundt",
+    notes: "WILHELM WUNDT\nItinuturing siya bilang Father of Experimental Psychology. Siya ang nagtatag ng kauna-unahang psychology laboratory noong 1879 sa Leipzig, Germany.\n\nSTRUCTURALISM & INTROSPECTION\nWhat it means: Naniwala siya na ang isip ng tao ay binubuo ng iba't ibang elements, at pwedeng pag-aralan ang structure of consciousness gamit ang masusing pag-obserba sa sariling saloobin at damdamin (introspection).\nMain Contribution: Pinalitan niya ang pilosopiya ng mga standardized at controlled experiments para i-measure ang mga bagay tulad ng reaction time, attention, at sensory perception.\n\nPractical Example:\nScenario: Papakinggan ng participant ang patak ng metronome at ire-report niya nang eksakto kung ano ang nararamdaman o naiisip niya sa bawat tunog sa ilalim ng strictly controlled na silid.\nApplication: Ginagamit ang introspection sa laboratory setting para hatiin ang conscious experience sa maliliit na bahagi.\n\nCFE Must-Know Highlights\n- 1879 Leipzig, Germany: Ang taon at lugar kung saan naging opisyal na siyensya ang psychology.\n- Standardization: Siya ang nagpasimula ng paggamit ng pare-parehong conditions at instructions sa laboratory testing."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Laid the foundation for Interest Inventories (e.g., Strong Vocational Interest Blank).",
+    answers: ["Guy Montrose Whipple", "Emil Kraepelin", "Wilhelm Wundt", "Seguin Form Board Test"],
+    correct: "Guy Montrose Whipple",
+    notes: "GUY MONTROSE WHIPPLE\nIsa siyang American psychologist na may malaking kontribusyon sa pag-organisa at pagpapadali ng paggamit ng psychological tests sa America noong early 1900s.\n\nSTANDARDIZATION OF TESTING\nWhat it means: Ang pagbuo ng uniform na pamamaraan sa pagbibigay (administration) at pagse-score ng mga tests para maging patas at reliable ang resulta.\nMain Contribution: Isinulat niya ang librong \"Manual of Mental and Physical Tests\" (1910) kung saan tinipon at ginawan ng pamantayan ang iba't ibang tests noong panahon na iyon.\n\nPractical Example:\nScenario: Pagbibigay ng malinaw na rules na dapat eksaktong 5 minuto lang ang ibigay na oras sa lahat ng kukuha ng exam at pare-pareho ang sasabihing instruction ng examiner.\nApplication: Sinisigurado nito na walang nakakakuha ng unfair advantage sa pagkuha ng test.\n\nCFE Must-Know Highlights\n- Standard Manual: Nagbigay ng kauna-unahang comprehensive manual para magkaroon ng pamantayan ang mga psychologists sa pag-administer ng tests.\n- Educational Psychology: Malaki ang naging tulong ng mga pamantayan niya sa pag-assess ng mga estudyante sa paaralan."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Developed to evaluate and educate individuals with Mental Disabilities.",
+    answers: ["Guy Montrose Whipple", "Emil Kraepelin", "Wilhelm Wundt", "Seguin Form Board Test"],
+    correct: "Seguin Form Board Test",
+    notes: "SEGUIN FORM BOARD TEST\nBinuo ito ni Édouard Séguin, isang French physician na pioneer sa pagtuturo sa mga taong may intellectual at developmental disabilities.\n\nNON-VERBAL PERFORMANCE TEST\nWhat it means: Isa itong hands-on na exam kung saan kailangang ipasok ng tao ang iba't ibang wooden shapes sa tamang lagayan o cutouts sa isang board nang mabilis at tama.\nMain Purpose: Ginawa ito para ma-evaluate ang visual-motor coordination, spatial abilities, at speed ng isang tao nang hindi umaasa sa pananalita o pagbabasa.\n\nPractical Example:\nScenario: Binibigyan ang isang bata ng board na may hollow spaces (square, circle, star) at kailangan niyang mai-shoot ang mga kahoy na hugis sa tamang pwesto gamit ang mabilis na pagkilos ng kamay.\nApplication: Ginagamit para sukatin ang spatial at motor ability nang hindi kailangang magsalita o magbasa ng test taker.\n\nCFE Must-Know Highlights\n- First Performance Test: Isa sa mga kauna-unahang non-verbal at performance-based assessment tools sa kasaysayan.\n- Accessibility: Naging tulong para ma-assess ang mga bata, taong may speech or hearing impairments, at may intellectual disabilities."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Created standardized examinations for Psychiatric Patients.",
+    answers: ["Guy Montrose Whipple", "Emil Kraepelin", "Wilhelm Wundt", "Seguin Form Board Test"],
+    correct: "Emil Kraepelin",
+    notes: "EMIL KRAEPELIN\nIsa siyang German psychiatrist at estudyante ni Wilhelm Wundt. Siya ang itinuturing na Father of Modern Clinical Psychiatry.\n\nPSYCHIATRIC CLASSIFICATION & FREE ASSOCIATION TESTS\nWhat it means: Naniwala siya na ang mga mental illnesses ay may biological at genetic causes, kaya pwedeng i-group at i-classify ang mga ito batay sa kanilang symptoms at progression.\nMain Contribution: Hiwalay niyang inilarawan ang Dementia Praecox (Schizophrenia) at Manic-Depressive Psychosis (Bipolar Disorder), at gumamit ng Word Association Tests para pag-aralan ang thought processes ng mga pasyente.\n\nPractical Example:\nScenario: Babasahan ang pasyente ng isang salita tulad ng \"Dark\" at kailangan niyang sabihin agad ang unang salitang pumasok sa isip niya (halimbawa: \"Night\" o \"Fear\").\nApplication: Ginagamit ang word association para makita kung may disturbance sa pag-iisip o abnormal pattern ng asosasyon ang isang psychiatric patient.\n\nCFE Must-Know Highlights\n- Father of Modern Clinical Psychiatry: Ang nagpasimula ng maayos na klasipikasyon ng mga mental disorders.\n- Foundation of DSM: Ang ginawa niyang classification system ang naging batayan ng diagnostic manuals tulad ng DSM at ICD.\n- Clinical Assessment: Ipinakita niya ang gamit ng testing sa clinical diagnosis at psychopathology."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "First intelligence scale to identify subnormal children. 1908 Revision: Introduced the concept of Mental Age.",
+    answers: ["David Wechsler (1939)", "Binet & Simon (1905)", "Lewis Terman (1916)", "Stanford Achievement Test (1923)"],
+    correct: "Binet & Simon (1905)",
+    notes: "ALFRED BINET & THÉODORE SIMON (1905)\nSina Alfred Binet at Théodore Simon ang nag-develop ng kauna-unahang practical intelligence test sa mundo.\n\nBINET-SIMON SCALE (1905)\n- What it means: 30-item test na naka-focus sa higher mental processes (judgment, reasoning, problem-solving) imbes na simpleng sensory skills.\n- Main Purpose: Hiningi ng French government para ma-identify ang mga batang may learning difficulties sa school para maipasok sa special education.\n\nPractical Example:\n- Scenario: Imbes na i-test kung gaano kalinaw ang mata o kabilis ang reflex, tatanungin ang bata: \"Kapag nawala ang baon mong pera sa eskwelahan, ano ang gagawin mo?\"\n- Application: Sinusukat nito ang practical judgment at problem-solving sa pang-araw-araw na buhay.\n\nCFE Must-Know Highlights\n- Higher Mental Processes: Binet's core belief—ang talino ay sinusukat sa pag-iisip at pagho-hold ng atensyon, hindi sa pandinig o paningin.\n- Mental Age: Ang level ng pag-iisip ng bata batay sa kakayahan ng kaniyang age group.\n- William Stern's Ratio IQ Formula: IQ = (Mental Age (MA) / Chronological Age (CA)) * 100\n- Impact: Ito ang kauna-unahang individual intelligence test sa kasaysayan ng psychology."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Adapted the Binet test for the U.S (Stanford-Binet).",
+    answers: ["David Wechsler (1939)", "Binet & Simon (1905)", "Lewis Terman (1916)", "Stanford Achievement Test (1923)"],
+    correct: "Lewis Terman (1916)",
+    notes: "LEWIS TERMAN (1916)\nIsa siyang American psychologist mula sa Stanford University na kumuha at nag-adapt ng Binet-Simon Scale para sa mga Amerikano.\n\nSTANFORD-BINET INTELLIGENCE SCALE (1916)\n- What it means: In-adapt at pinalawak niya ang orihinal na Binet-Simon Scale sa pamamagitan ng pagdadagdag ng mga bagong items, pag-revise ng mga lumang tanong, at paggamit ng American sample para magkaroon ng malinaw na norms.\n- Main Contribution: Siya ang kauna-unahang gumamit at nagpasikat ng Intelligence Quotient (IQ) sa isang standardized test (gamit ang formula na binuo ni William Stern).\n\nPractical Example:\n- Scenario: Ang isang 10-year-old na bata (Chronological Age = 10) ay nakasagot sa mga tanong na pang-12-year-old level (Mental Age = 12).\n- Application: Ginamit ang formula na (Mental Age/Chronological Age) * 100 para makuha ang kaniyang IQ. Dahil (12/10)*100 = 120, ang kaniyang IQ score ay 120 (Above Average).\n\nCFE Must-Know Highlights\n- Stanford-Binet Intelligence Scale: Ang kauna-unahang ginamit na bersyon ng Binet test sa United States.\n- Popularized IQ: Si Terman ang nag-introduce ng Ratio IQ sa practical psychological testing.\n- Giftedness Study: Kilala rin siya sa kaniyang sikat na longitudinal study sa mga matatalinong bata na tinawag na \"Terman's Termites\" (Genetic Studies of Genius)."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "First standardized Academic Achievement test battery.",
+    answers: ["David Wechsler (1939)", "Binet & Simon (1905)", "Lewis Terman (1916)", "Stanford Achievement Test (1923)"],
+    correct: "Stanford Achievement Test (1923)",
+    notes: "STANFORD ACHIEVEMENT TEST (1923)\nBinuo ito nina Truman Lee Kelley, Giles Murrel Ruch, at Lewis Terman para sa educational assessment sa mga paaralan.\n\nSTANFORD ACHIEVEMENT TEST (SAT)\n- What it means: Isa itong standardized group test na dinisenyo para sukatin ang natutunan o napag-aralan (school achievement) ng mga estudyante sa iba't ibang academic subjects (tulad ng reading, spelling, at arithmetic), imbes na ang innate intelligence lang.\n- Main Purpose: Ginawa ito para magkaroon ang mga eskwelahan ng objective at parehong sukatan kung gaano kabisa ang pagtuturo at kung ano na ang totoong antas ng kaalaman ng mga mag-aaral.\n\nPractical Example:\n- Scenario: Sa pagtatapos ng Grade 6, sabay-sabay na kukuha ang buong klase ng multiple-choice exam sa Math, Reading, at Science na may limitadong oras at pare-parehong panuntunan.\n- Application: Ginagamit ang resulta para makita kung sinong mga estudyante ang handa nang lumipat sa susunod na grade level at kung aling mga paksa ang kailangang i-review ng guro.\n\nCFE Must-Know Highlights\n- Achievement Test vs. Intelligence Test: Ang Stanford Achievement Test ay sumusukat sa natutunan mula sa edukasyon (acquired knowledge), habang ang intelligence test ay nakatuon sa pangkalahatang kakayahang matuto (learning potential).\n- First Standardized Achievement Battery: Ito ang kauna-unahang comprehensive at standardized battery of tests para sa mga asignatura sa eskwelahan.\n- Mass Group Testing: Naging halimbawa ito kung paano gagamitin ang standardized multiple-choice testing para sa malawakang pagtatasa sa larangan ng edukasyon."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 01",
+    question: "Provided Multiple Scores instead of a single overall IQ score.",
+    answers: ["David Wechsler (1939)", "Binet & Simon (1905)", "Lewis Terman (1916)", "Stanford Achievement Test (1923)"],
+    correct: "David Wechsler (1939)",
+    notes: "DAVID WECHSLER (1939)\nIsa siyang American clinical psychologist na nag-develop ng mga bago at mas angkop na intelligence tests para sa mga matatanda (adults), dahil nakita niyang may mga limitasyon ang Stanford-Binet sa mga hindi na bata.\n\nWECHSLER-BELLEVUE INTELLIGENCE SCALE (1939)\n- What it means: Ang kauna-unahang intelligence test na ginawa para sa mga adults. Binubuo ito ng parehong Verbal at Performance (Non-Verbal) subtests para sukatin ang pangkalahatang talino ng tao.\n- Main Contribution: Pinalitan niya ang lumang Ratio IQ at ginamit ang Deviation IQ (isang statistical measure na nagkukumpara sa score ng tao laban sa kaniyang sariling age group).\n\nPractical Example:\n- Scenario: Isang 35-year-old na aplikante sa trabaho ang kumuha ng test. Sa Verbal part, tinanong ang bokabularyo at reasoning niya. Sa Performance part, pinag-arrange siya ng mga blocks at pictures nang mabilis.\n- Application: Nakakakuha ang psychologist ng hiwalay na Verbal IQ at Performance IQ score, kaya nakikita kung saan magaling ang tao kahit nahihirapan siya sa pananalita o pagbabasa.\n\nCFE Must-Know Highlights\n- Deviation IQ: Inalis ang Mental Age formula para sa adults; pinalitan ng Mean = 100 at Standard Deviation = 15.\n- Point Scale System: Inayos ang items ayon sa uri ng content at pinagpangkat-pangkat (subtests), imbes na ayon sa age levels (age scale).\n- Verbal vs. Performance: Pinatunayan niya na ang intelligence ay kinabibilangan din ng non-verbal ability at spatial manipulation, hindi lang salita o memorya.\n- Legacy: Ang test na ito ang naging basehan para sa WAIS (Wechsler Adult Intelligence Scale) at WISC (Wechsler Intelligence Scale for Children) na pinakasikat na individual IQ tests ngayon."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Earliest known civil service testing system for selection and decision-making.",
+    answers: ["Han Dynasty", "East India Company", "China", "Ming Dynasty"],
+    correct: "China",
+    notes: "The history of psychological testing began in ancient CHINA over 4,000 YEARS AGO. The Chinese used a detailed CIVIL SERVICE TESTING SYSTEM for selection and decision-making.\n\nExample:\nBefore the emperor hired someone for a government job, applicants had to go through tests and evaluations to prove they were actually qualified.\n\nOral Examinations Every Three Years:\nGovernment employees took verbal or oral tests every three years.\nPurpose: Used for WORK EVALUATION and PROMOTION DECISIONS."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Introduced the Test Battery (combining two or more tests).",
+    answers: ["Han Dynasty", "East India Company", "China", "Ming Dynasty"],
+    correct: "Han Dynasty",
+    notes: "Noong Han Dynasty, sinimulan sa civil service testing system ng China ang paggamit ng magkakasamang iba't ibang tests.\n\nTEST BATTERY\nIbig sabihin: Paggamit ng dalawa o higit pang tests nang magkasama (two or more tests combined) sa halip na umaasa lang sa single test.\n\nBakit mahalaga: Kapag single test lang ang ginamit, limited or incomplete information ang makukuha mo. Kapag nag-gather ka ng data from multiple sources, mas nagiging malinaw at kumpleto ang picture ng overall abilities ng isang tao.\n\nModern Application: Ito ang naging basehan ng psychological assessment ngayon—bihira nang gumamit ang mga psychologist ng iisang test lang; gumagamit sila ng test battery (halimbawa: IQ test + personality test + interview) para i-evaluate ang isang tao."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Used testing booths as a multi-stage Filtering System.",
+    answers: ["Han Dynasty", "East India Company", "China", "Ming Dynasty"],
+    correct: "Ming Dynasty",
+    notes: "Noong Ming Dynasty, ginawa nilang mas mahigpit at multi-level yung testing para sa mga gustong pumasok sa government.\n\nMULTISTAGE FILTERING SYSTEM\n• What it means: Isa itong nationwide system na may iba't ibang levels of exam na kailangang ipasa ng applicants bago sila ma-hire.\n• Main Purpose: Ginawa ito bilang FILTERING SYSTEM para ma-screen nang maayos ang mga tao at makuha lang yung pinaka-qualified.\n• Why it matters in Psych Assessment: Dito nag-start lumabas yung important questions regarding testing:\nFAIRNESS: Fair ba talaga yung standards para sa lahat ng nag-a-apply?\nJOB RELEVANCE: Connected at relevant ba talaga yung exam questions sa mismong trabaho?"
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Adopted China's testing model for employee recruitment.",
+    answers: ["Han Dynasty", "East India Company", "China", "Ming Dynasty"],
+    correct: "East India Company",
+    notes: "ENGLISH EAST INDIA COMPANY\nNa-inspire ang British company na 'to sa testing system ng China, kaya ginaya nila ito para sa pag-select ng sarili nilang employees.\n\nCULTURAL TRANSFER\nWhat it means: Ang pagkuha o pag-adopt ng isang testing system mula sa isang bansa/kultura at pag-apply nito sa ibang kultura.\nMain Purpose: Ginamit ng company ang system na 'to para magkaroon ng mas structured at objective na paraan ng pagpili ng staff.\nWhy it matters in Psych Assessment: Dito nag-start ang issue tungkol sa CULTURAL FAIRNESS:\n- ADAPTABILITY: Kapag ang test ay galing sa ibang kultura, gagana pa rin ba ito nang maayos sa ibang grupo ng tao?\n- BIAS: Baka maging unfair o biased ang test kapag hindi ito na-adjust sa kultura ng mga bagong kukuha ng exam."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Published On the Origin of Species; concept of Individual Differences formed the basis for psychological testing.",
+    answers: ["James McKeen Cattell", "Charles Darwin", "Sir Francis Galton", "Ernst Heinrich Weber"],
+    correct: "Charles Darwin",
+    notes: "CHARLES DARWIN\nKahit hindi siya psychologist, malaki ang naging epekto ng evolutionary theory ni Charles Darwin sa larangan ng psychological testing.\n\nINDIVIDUAL DIFFERENCES\nWhat it means: Ang pag-aaral kung bakit magkakaiba ang mga tao sa kanilang traits, abilities, at characteristics.\nMain Idea: Sa theory ni Darwin na natural selection, pinalabas niya na ang mga species ay may individual variation—may mga katangian ang ilang indibidwal na nakakatulong sa kanila para mag-adapt at ma-survive ang environment.\n\nPractical Example:\nScenario: Sa isang kumpanya, dalawang aplikante ang binigyan ng bagong software. Ang isa ay mabilis matuto (high adaptability), habang ang isa ay nahihirapan mag-adjust.\nApplication: Ipinapakita nito kung paano nagkakaiba-iba ang kakayahan ng tao na mag-adapt sa pagbabago sa kanilang paligid.\n\nCFE Must-Know Highlights\n- Scientific Basis: Dahil sa kaniya, na-realize ng mga scientists na mahalagang i-measure at i-quantify ang pagkakaiba-iba ng tao.\n- Inspiration: Ang mga ideya niya ang nag-inspire sa pinsan niyang si Francis Galton para simulan ang kauna-unahang scientific testing sa mga tao."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Studied individual variations in Sensory and Motor functioning (reaction time, visual acuity, physical strength).",
+    answers: ["James McKeen Cattell", "Charles Darwin", "Sir Francis Galton", "Ernst Heinrich Weber"],
+    correct: "Sir Francis Galton",
+    notes: "SIR FRANCIS GALTON\nPinsan siya ni Charles Darwin at kilala bilang Father of Mental Testing. Siya ang kauna-unahang nag-try na mag-measure ng individual differences ng tao sa scientific na paraan.\n\nINDIVIDUAL DIFFERENCES & HEREDITARY GENIUS\nWhat it means: Naniwala siya na ang intelligence at abilities ng tao ay mostly inherited o namamana sa mga magulang.\nMain Contribution: Nagtayo siya ng Anthropometric Laboratory kung saan nag-collect siya ng physical at sensory data ng libo-libong tao (halimbawa: reaction time, visual acuity, at arm span).\n\nPractical Example:\nScenario: Sinusukat ang bilis ng pag-pindot ng tao sa button kapag nakakita ng ilaw (reaction time) o kung gaano kahina na tunog ang kaya niyang marinig.\nApplication: Naniniwala si Galton na kapag mas mabilis ang reflex at mas matalas ang senses mo, mas mataas ang intellectual capacity mo.\n\nCFE Must-Know Highlights\n- Sensory Motor Focus: Naniwala siya na ang tao na may mas matalas na senses ay mas matalino.\n- Statistical Tools: Siya ang nag-introduce ng mga batayang statistical concept na ginagamit sa testing, tulad ng correlation (sa tulong ni Karl Pearson) at percentiles.\n- Father of Mental Testing: Ang kauna-unahang nagdisenyo ng mga pamamaraan para sukatin ang kakayahan ng tao sa laboratory setting."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Coined the term \"Mental Test\" in 1890.",
+    answers: ["James McKeen Cattell", "Charles Darwin", "Sir Francis Galton", "Ernst Heinrich Weber"],
+    correct: "James McKeen Cattell",
+    notes: "JAMES MCKEEN CATTELL\nIsa siyang American psychologist na nag-aral sa ilalim nina Wilhelm Wundt at Francis Galton. Siya ang nagdala ng mga ideya ng testing mula sa Europe papuntang United States.\n\nMENTAL TEST\nWhat it means: Siya ang kauna-unahang nag-coin o gumamit ng mismong term na \"Mental Test\" sa psychological literature noong 1890.\nMain Contribution: Nag-develop siya ng series ng tests para sa mga college students para i-measure ang kanilang memory, sensory motor skills, at reaction time.\n\nPractical Example:\nScenario: Pagpapatest sa isang estudyante kung ilang numero ang kaya niyang maalaala agad o kung gaano kadiin ang kaya niyang itulak gamit ang kaniyang kamay (dynamometer).\nApplication: Ginamit ito sa mga papasok na college students para subukang prediksyunan ang kaniyang academic performance.\n\nCFE Must-Know Highlights\n- Coined \"Mental Test\": Ang pinakamahalagang keyword na nakakabit sa pangalan niya sa mga board exams.\n- Popularization: Siya ang nag-promote na gamitin ang psychological testing sa practical applications, lalo na sa education at selection sa America."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Investigated the Psychological Threshold (minimum stimulus to evoke a sensory response).",
+    answers: ["Guy Montrose Whipple", "Gustav Theodor Fechner", "Wilhelm Wundt", "Ernst Heinrich Weber"],
+    correct: "Ernst Heinrich Weber",
+    notes: "ERNST HEINRICH WEBER\nIsa siyang German physician at anatomist na itinuturing na isa sa mga founders ng experimental psychology at psychophysics.\n\nJUST NOTICEABLE DIFFERENCE (JND)\nWhat it means: Ang pinakamaliit na pagbabago sa isang stimulus (halimbawa: bigat, liwanag, o tunog) na kayang mapansin o ma-detect ng isang tao.\nMain Contribution: Dinisenyo niya ang Weber's Law, kung saan ipinakita niya na ang JND ay hindi nakadepende sa absolute amount ng pagbabago, kundi sa constant proportion o ratio nito sa original stimulus.\n\nPractical Example:\nScenario: Kapag hawak mo ang isang 1 kg na bag, madali mong mapapansin kung dadagdagan ito ng 100 grams. Pero kapag hawak mo ay 50 kg na sako, hindi mo mapapansin ang dagdag na 100 grams—kailangan ng mas malaking bawas o dagdag para mapansin mo ang pagkakaiba.\nApplication: Ipinapakita nito kung paano gumagana ang sensory discrimination ng tao.\n\nCFE Must-Know Highlights\n- Just Noticeable Difference (JND): Ang pinakamaliit na pagkakaiba sa stimulus na kayang ma-detect ng perception ng tao.\n- Quantifying Mind & Senses: Ipinakita niya na pwedeng i-measure mathematically ang ugnayan ng physical world at ng mental experience."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Founded Psychophysics (mathematical relationship between physical stimuli and psychological sensations).",
+    answers: ["Guy Montrose Whipple", "Gustav Theodor Fechner", "Wilhelm Wundt", "Ernst Heinrich Weber"],
+    correct: "Gustav Theodor Fechner",
+    notes: "GUSTAV THEODOR FECHNER\nIsa siyang German physicist at philosopher na nagpaitaas sa mga ginawa ni Weber. Siya ang itinuturing na Father of Psychophysics.\n\nPSYCHOPHYSICS\nWhat it means: Ang pag-aaral sa ugnayan ng physical stimuli (mga bagay sa labas tulad ng liwanag o tunog) at ng psychological sensation (kung paano natin ito nararamdaman o na-pe-perceive).\nMain Contribution: Binuo niya ang Fechner's Law (na na-inspire sa Weber's Law). Ipinakita niya rito na habang lumalaki nang lumalaki ang intensity ng isang physical stimulus, mas nagiging mabagal na ang pagtaas ng nararamdaman nating sensation.\n\nPractical Example:\nScenario: Sa isang madilim na silid, ang pagsindi ng isang kandila ay magmumukhang napakaliwanag. Pero kung sisindi ka ng kandila sa ilalim ng matinding sikat ng araw, halos hindi mo mararamdaman ang dagdag na liwanag.\nApplication: Sinusukat dito ang ugnayan ng physical intensity ng bagay at ng subjective mental perception ng tao.\n\nCFE Must-Know Highlights\n- Father of Psychophysics: Ang nagtatag ng disiplinang nag-uugnay sa physical stimulus at mental experience.\n- First Mental Measurement: Napatunayan niya na ang mental processes at subjective feelings ng tao ay pwedeng i-measure sa mathematical na paraan."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Established the first formal Psychology Laboratory in Leipzig, Germany.",
+    answers: ["Guy Montrose Whipple", "Emil Kraepelin", "Wilhelm Wundt", "Seguin Form Board Test"],
+    correct: "Wilhelm Wundt",
+    notes: "WILHELM WUNDT\nItinuturing siya bilang Father of Experimental Psychology. Siya ang nagtatag ng kauna-unahang psychology laboratory noong 1879 sa Leipzig, Germany.\n\nSTRUCTURALISM & INTROSPECTION\nWhat it means: Naniwala siya na ang isip ng tao ay binubuo ng iba't ibang elements, at pwedeng pag-aralan ang structure of consciousness gamit ang masusing pag-obserba sa sariling saloobin at damdamin (introspection).\nMain Contribution: Pinalitan niya ang pilosopiya ng mga standardized at controlled experiments para i-measure ang mga bagay tulad ng reaction time, attention, at sensory perception.\n\nPractical Example:\nScenario: Papakinggan ng participant ang patak ng metronome at ire-report niya nang eksakto kung ano ang nararamdaman o naiisip niya sa bawat tunog sa ilalim ng strictly controlled na silid.\nApplication: Ginagamit ang introspection sa laboratory setting para hatiin ang conscious experience sa maliliit na bahagi.\n\nCFE Must-Know Highlights\n- 1879 Leipzig, Germany: Ang taon at lugar kung saan naging opisyal na siyensya ang psychology.\n- Standardization: Siya ang nagpasimula ng paggamit ng pare-parehong conditions at instructions sa laboratory testing."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Laid the foundation for Interest Inventories (e.g., Strong Vocational Interest Blank).",
+    answers: ["Guy Montrose Whipple", "Emil Kraepelin", "Wilhelm Wundt", "Seguin Form Board Test"],
+    correct: "Guy Montrose Whipple",
+    notes: "GUY MONTROSE WHIPPLE\nIsa siyang American psychologist na may malaking kontribusyon sa pag-organisa at pagpapadali ng paggamit ng psychological tests sa America noong early 1900s.\n\nSTANDARDIZATION OF TESTING\nWhat it means: Ang pagbuo ng uniform na pamamaraan sa pagbibigay (administration) at pagse-score ng mga tests para maging patas at reliable ang resulta.\nMain Contribution: Isinulat niya ang librong \"Manual of Mental and Physical Tests\" (1910) kung saan tinipon at ginawan ng pamantayan ang iba't ibang tests noong panahon na iyon.\n\nPractical Example:\nScenario: Pagbibigay ng malinaw na rules na dapat eksaktong 5 minuto lang ang ibigay na oras sa lahat ng kukuha ng exam at pare-pareho ang sasabihing instruction ng examiner.\nApplication: Sinisigurado nito na walang nakakakuha ng unfair advantage sa pagkuha ng test.\n\nCFE Must-Know Highlights\n- Standard Manual: Nagbigay ng kauna-unahang comprehensive manual para magkaroon ng pamantayan ang mga psychologists sa pag-administer ng tests.\n- Educational Psychology: Malaki ang naging tulong ng mga pamantayan niya sa pag-assess ng mga estudyante sa paaralan."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Developed to evaluate and educate individuals with Mental Disabilities.",
+    answers: ["Guy Montrose Whipple", "Emil Kraepelin", "Wilhelm Wundt", "Seguin Form Board Test"],
+    correct: "Seguin Form Board Test",
+    notes: "SEGUIN FORM BOARD TEST\nBinuo ito ni Édouard Séguin, isang French physician na pioneer sa pagtuturo sa mga taong may intellectual at developmental disabilities.\n\nNON-VERBAL PERFORMANCE TEST\nWhat it means: Isa itong hands-on na exam kung saan kailangang ipasok ng tao ang iba't ibang wooden shapes sa tamang lagayan o cutouts sa isang board nang mabilis at tama.\nMain Purpose: Ginawa ito para ma-evaluate ang visual-motor coordination, spatial abilities, at speed ng isang tao nang hindi umaasa sa pananalita o pagbabasa.\n\nPractical Example:\nScenario: Binibigyan ang isang bata ng board na may hollow spaces (square, circle, star) at kailangan niyang mai-shoot ang mga kahoy na hugis sa tamang pwesto gamit ang mabilis na pagkilos ng kamay.\nApplication: Ginagamit para sukatin ang spatial at motor ability nang hindi kailangang magsalita o magbasa ng test taker.\n\nCFE Must-Know Highlights\n- First Performance Test: Isa sa mga kauna-unahang non-verbal at performance-based assessment tools sa kasaysayan.\n- Accessibility: Naging tulong para ma-assess ang mga bata, taong may speech or hearing impairments, at may intellectual disabilities."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Created standardized examinations for Psychiatric Patients.",
+    answers: ["Guy Montrose Whipple", "Emil Kraepelin", "Wilhelm Wundt", "Seguin Form Board Test"],
+    correct: "Emil Kraepelin",
+    notes: "EMIL KRAEPELIN\nIsa siyang German psychiatrist at estudyante ni Wilhelm Wundt. Siya ang itinuturing na Father of Modern Clinical Psychiatry.\n\nPSYCHIATRIC CLASSIFICATION & FREE ASSOCIATION TESTS\nWhat it means: Naniwala siya na ang mga mental illnesses ay may biological at genetic causes, kaya pwedeng i-group at i-classify ang mga ito batay sa kanilang symptoms at progression.\nMain Contribution: Hiwalay niyang inilarawan ang Dementia Praecox (Schizophrenia) at Manic-Depressive Psychosis (Bipolar Disorder), at gumamit ng Word Association Tests para pag-aralan ang thought processes ng mga pasyente.\n\nPractical Example:\nScenario: Babasahan ang pasyente ng isang salita tulad ng \"Dark\" at kailangan niyang sabihin agad ang unang salitang pumasok sa isip niya (halimbawa: \"Night\" o \"Fear\").\nApplication: Ginagamit ang word association para makita kung may disturbance sa pag-iisip o abnormal pattern ng asosasyon ang isang psychiatric patient.\n\nCFE Must-Know Highlights\n- Father of Modern Clinical Psychiatry: Ang nagpasimula ng maayos na klasipikasyon ng mga mental disorders.\n- Foundation of DSM: Ang ginawa niyang classification system ang naging batayan ng diagnostic manuals tulad ng DSM at ICD.\n- Clinical Assessment: Ipinakita niya ang gamit ng testing sa clinical diagnosis at psychopathology."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "First intelligence scale to identify subnormal children. 1908 Revision: Introduced the concept of Mental Age.",
+    answers: ["David Wechsler (1939)", "Binet & Simon (1905)", "Lewis Terman (1916)", "Stanford Achievement Test (1923)"],
+    correct: "Binet & Simon (1905)",
+    notes: "ALFRED BINET & THÉODORE SIMON (1905)\nSina Alfred Binet at Théodore Simon ang nag-develop ng kauna-unahang practical intelligence test sa mundo.\n\nBINET-SIMON SCALE (1905)\n- What it means: 30-item test na naka-focus sa higher mental processes (judgment, reasoning, problem-solving) imbes na simpleng sensory skills.\n- Main Purpose: Hiningi ng French government para ma-identify ang mga batang may learning difficulties sa school para maipasok sa special education.\n\nPractical Example:\n- Scenario: Imbes na i-test kung gaano kalinaw ang mata o kabilis ang reflex, tatanungin ang bata: \"Kapag nawala ang baon mong pera sa eskwelahan, ano ang gagawin mo?\"\n- Application: Sinusukat nito ang practical judgment at problem-solving sa pang-araw-araw na buhay.\n\nCFE Must-Know Highlights\n- Higher Mental Processes: Binet's core belief—ang talino ay sinusukat sa pag-iisip at pagho-hold ng atensyon, hindi sa pandinig o paningin.\n- Mental Age: Ang level ng pag-iisip ng bata batay sa kakayahan ng kaniyang age group.\n- William Stern's Ratio IQ Formula: IQ = (Mental Age (MA) / Chronological Age (CA)) * 100\n- Impact: Ito ang kauna-unahang individual intelligence test sa kasaysayan ng psychology."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Adapted the Binet test for the U.S (Stanford-Binet).",
+    answers: ["David Wechsler (1939)", "Binet & Simon (1905)", "Lewis Terman (1916)", "Stanford Achievement Test (1923)"],
+    correct: "Lewis Terman (1916)",
+    notes: "LEWIS TERMAN (1916)\nIsa siyang American psychologist mula sa Stanford University na kumuha at nag-adapt ng Binet-Simon Scale para sa mga Amerikano.\n\nSTANFORD-BINET INTELLIGENCE SCALE (1916)\n- What it means: In-adapt at pinalawak niya ang orihinal na Binet-Simon Scale sa pamamagitan ng pagdadagdag ng mga bagong items, pag-revise ng mga lumang tanong, at paggamit ng American sample para magkaroon ng malinaw na norms.\n- Main Contribution: Siya ang kauna-unahang gumamit at nagpasikat ng Intelligence Quotient (IQ) sa isang standardized test (gamit ang formula na binuo ni William Stern).\n\nPractical Example:\n- Scenario: Ang isang 10-year-old na bata (Chronological Age = 10) ay nakasagot sa mga tanong na pang-12-year-old level (Mental Age = 12).\n- Application: Ginamit ang formula na (Mental Age/Chronological Age) * 100 para makuha ang kaniyang IQ. Dahil (12/10)×100 = 120, ang kaniyang IQ score ay 120 (Above Average).\n\nCFE Must-Know Highlights\n- Stanford-Binet Intelligence Scale: Ang kauna-unahang ginamit na bersyon ng Binet test sa United States.\n- Popularized IQ: Si Terman ang nag-introduce ng Ratio IQ sa practical psychological testing.\n- Giftedness Study: Kilala rin siya sa kaniyang sikat na longitudinal study sa mga matatalinong bata na tinawag na \"Terman's Termites\" (Genetic Studies of Genius)."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "First standardized Academic Achievement test battery.",
+    answers: ["David Wechsler (1939)", "Binet & Simon (1905)", "Lewis Terman (1916)", "Stanford Achievement Test (1923)"],
+    correct: "Stanford Achievement Test (1923)",
+    notes: "STANFORD ACHIEVEMENT TEST (1923)\nBinuo ito nina Truman Lee Kelley, Giles Murrel Ruch, at Lewis Terman para sa educational assessment sa mga paaralan.\n\nSTANFORD ACHIEVEMENT TEST (SAT)\n- What it means: Isa itong standardized group test na dinisenyo para sukatin ang natutunan o napag-aralan (school achievement) ng mga estudyante sa iba't ibang academic subjects (tulad ng reading, spelling, at arithmetic), imbes na ang innate intelligence lang.\n- Main Purpose: Ginawa ito para magkaroon ang mga eskwelahan ng objective at parehong sukatan kung gaano kabisa ang pagtuturo at kung ano na ang totoong antas ng kaalaman ng mga mag-aaral.\n\nPractical Example:\n- Scenario: Sa pagtatapos ng Grade 6, sabay-sabay na kukuha ang buong klase ng multiple-choice exam sa Math, Reading, at Science na may limitadong oras at pare-parehong panuntunan.\n- Application: Ginagamit ang resulta para makita kung sinong mga estudyante ang handa nang lumipat sa susunod na grade level at kung aling mga paksa ang kailangang i-review ng guro.\n\nCFE Must-Know Highlights\n- Achievement Test vs. Intelligence Test: Ang Stanford Achievement Test ay sumusukat sa natutunan mula sa edukasyon (acquired knowledge), habang ang intelligence test ay nakatuon sa pangkalahatang kakayahang matuto (learning potential).\n- First Standardized Achievement Battery: Ito ang kauna-unahang comprehensive at standardized battery of tests para sa mga asignatura sa eskwelahan.\n- Mass Group Testing: Naging halimbawa ito kung paano gagamitin ang standardized multiple-choice testing para sa malawakang pagtatasa sa larangan ng edukasyon."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 02",
+    question: "Provided Multiple Scores instead of a single overall IQ score.",
+    answers: ["David Wechsler (1939)", "Binet & Simon (1905)", "Lewis Terman (1916)", "Stanford Achievement Test (1923)"],
+    correct: "David Wechsler (1939)",
+    notes: "DAVID WECHSLER (1939)\nIsa siyang American clinical psychologist na nag-develop ng mga bago at mas angkop na intelligence tests para sa mga matatanda (adults), dahil nakita niyang may mga limitasyon ang Stanford-Binet sa mga hindi na bata.\n\nWECHSLER-BELLEVUE INTELLIGENCE SCALE (1939)\n- What it means: Ang kauna-unahang intelligence test na ginawa para sa mga adults. Binubuo ito ng parehong Verbal at Performance (Non-Verbal) subtests para sukatin ang pangkalahatang talino ng tao.\n- Main Contribution: Pinalitan niya ang lumang Ratio IQ at ginamit ang Deviation IQ (isang statistical measure na nagkukumpara sa score ng tao laban sa kaniyang sariling age group).\n\nPractical Example:\n- Scenario: Isang 35-year-old na aplikante sa trabaho ang kumuha ng test. Sa Verbal part, tinanong ang bokabularyo at reasoning niya. Sa Performance part, pinag-arrange siya ng mga blocks at pictures nang mabilis.\n- Application: Nakakakuha ang psychologist ng hiwalay na Verbal IQ at Performance IQ score, kaya nakikita kung saan magaling ang tao kahit nahihirapan siya sa pananalita o pagbabasa.\n\nCFE Must-Know Highlights\n- Deviation IQ: Inalis ang Mental Age formula para sa adults; pinalitan ng Mean = 100 at Standard Deviation = 15.\n- Point Scale System: Inayos ang items ayon sa uri ng content at pinagpangkat-pangkat (subtests), imbes na ayon sa age levels (age scale).\n- Verbal vs. Performance: Pinatunayan niya na ang intelligence ay kinabibilangan din ng non-verbal ability at spatial manipulation, hindi lang salita o memorya.\n- Legacy: Ang test na ito ang naging basehan para sa WAIS (Wechsler Adult Intelligence Scale) at WISC (Wechsler Intelligence Scale for Children) na pinakasikat na individual IQ tests ngayon."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Categorization or classification without any inherent rank or numerical order.",
+    answers: ["Nominal Scale", "Ordinal Scale", "Interval Scale", "Ratio Scale"],
+    correct: "Nominal Scale",
+    notes: "NOMINAL SCALE\nPang-label o pang-kategory lang ito. Walang mas mataas o mas mababa na rank.\n\nPractical Example:\nCategorizing psychiatric diagnoses (e.g., Depression, Anxiety, Bipolar Disorder) or labeling preferred learning styles (Visual, Auditory, Kinesthetic).\n\nCFE Must-Know Highlights:\n- Lowest level of measurement.\n- Numbers (if used) serve purely as names or labels, not quantities."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Categorization with a logical rank ordering, but the intervals between ranks are not necessarily equal.",
+    answers: ["Nominal Scale", "Ordinal Scale", "Interval Scale", "Ratio Scale"],
+    correct: "Ordinal Scale",
+    notes: "ORDINAL SCALE\nMay pagkakasunod-sunod o ranking na, pero hindi pantay-pantay ang agwat ng bawat rank.\n\nPractical Example:\nRanking job applicants by desirability, listing patients on a psychotherapy waiting list based on severity of need, or rating satisfaction on a Likert scale (1-Very Dissatisfied to 4-Very Satisfied).\n\nCFE Must-Know Highlights:\n- Has magnitude/order, but unequal intervals.\n- Expresses relative position (1st, 2nd, 3rd)."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Equal distances/intervals between numbers, but lacks a true/absolute zero point.",
+    answers: ["Nominal Scale", "Ordinal Scale", "Interval Scale", "Ratio Scale"],
+    correct: "Interval Scale",
+    notes: "INTERVAL SCALE\nPantay-pantay ang agwat ng bawat numero, pero ang zero dito ay arbitrary o hindi ibig sabihin na walang-wala o absent ang sinusukat.\n\nPractical Example:\nStandardized IQ test scores or measuring classroom temperature in Celsius (30°C) (where 0°C does not mean complete absence of heat).\n\nCFE Must-Know Highlights:\n- Has magnitude and equal intervals.\n- Zero is arbitrary (no absolute zero)."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Equal intervals between numbers plus a true/absolute zero point representing the complete absence of the measured characteristic.",
+    answers: ["Nominal Scale", "Ordinal Scale", "Interval Scale", "Ratio Scale"],
+    correct: "Ratio Scale",
+    notes: "RATIO SCALE\nPantay ang agwat at may true zero—ibig sabihin kapag zero, zero talaga (walang-wala).\n\nPractical Example:\nMeasuring a patient's heart rate, reaction time in seconds during a cognitive task, or height in centimeters.\n\nCFE Must-Know Highlights:\n- Highest level of measurement.\n- Allows mathematical statements like \"double\" or \"half\" due to absolute zero."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "The ability to say one instance of an attribute represents more, less, or equal amounts compared to another.",
+    answers: ["Magnitude", "Equal Intervals", "Absolute Zero", "Skewness"],
+    correct: "Magnitude",
+    notes: "MAGNITUDE\nKakayahang masabi kung mas marami, mas kaunti, o pantay ang sukat ng isang katangian kumpara sa iba.\n\nPractical Example:\nKnowing that a score of 80 on a depression inventory indicates higher depressive symptoms than a score of 50.\n\nCFE Must-Know Highlights:\n- Property of order or ranking inherent in ordinal, interval, and ratio scales."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "The difference between any two adjacent units on the scale is identical across the entire scale.",
+    answers: ["Magnitude", "Equal Intervals", "Absolute Zero", "Kurtosis"],
+    correct: "Equal Intervals",
+    notes: "EQUAL INTERVALS\nPare-pareho ang pagitan o distansya ng bawat unit sa buong scale.\n\nPractical Example:\nThe difference between an IQ of 100 and 110 is identical to the difference between 110 and 120.\n\nCFE Must-Know Highlights:\n- Present in interval and ratio scales.\n- Allows addition and subtraction of scale scores."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Points to a point where none of the trait or attribute exists.",
+    answers: ["Magnitude", "Equal Intervals", "Absolute Zero", "Standard Deviation"],
+    correct: "Absolute Zero",
+    notes: "ABSOLUTE ZERO\nAng punto kung saan totally zero o walang-wala 'yung sinusukat na trait o attribute.\n\nPractical Example:\nA heart rate monitor showing 0 beats per minute.\n\nCFE Must-Know Highlights:\n- Unique property present ONLY in ratio scales.\n- Enables ratio comparisons (e.g., twice as fast)."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Theoretically permits division of values into infinite fractional parts.",
+    answers: ["Continuous Scale", "Discrete Scale", "Nominal Scale", "Ordinal Scale"],
+    correct: "Continuous Scale",
+    notes: "CONTINUOUS SCALE\nPwedeng may decimals o fractions; tuloy-tuloy ang sukat at hindi lang nakatali sa whole numbers.\n\nPractical Example:\nTime taken to complete a neurodevelopmental assessment task (e.g., 12.45 seconds).\n\nCFE Must-Know Highlights:\n- Measures variables that can take any value along a continuum."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Measures categorical or countable variables with distinct values.",
+    answers: ["Continuous Scale", "Discrete Scale", "Interval Scale", "Ratio Scale"],
+    correct: "Discrete Scale",
+    notes: "DISCRETE SCALE\nBinibilang lang sa pamamagitan ng buong numero (whole numbers). Walang kalahati o decimal.\n\nPractical Example:\nCounting the number of siblings a participant has or the number of correct responses on a 20-item multiple-choice test.\n\nCFE Must-Know Highlights:\n- Represents distinct, separate units or categories."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "An unmodified original score obtained directly from assessment.",
+    answers: ["Raw Score", "Standard Score", "z-score", "Percentile Rank"],
+    correct: "Raw Score",
+    notes: "RAW SCORE\n'Yung mismong nakuhang puntos sa test bago i-compute, i-convert, o i-interpret.\n\nPractical Example:\nScoring 42 out of 50 items correctly on an achievement test.\n\nCFE Must-Know Highlights:\n- Initial baseline score.\n- Usually meaningless by itself without norms or standardization."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Summarizes how frequently each score or score interval appears in a set of data.",
+    answers: ["Frequency Distribution", "Standard Deviation", "Correlation", "Scatterplot"],
+    correct: "Frequency Distribution",
+    notes: "FREQUENCY DISTRIBUTION\nPag-aayos o pag-sasaayos ng data para makita kung ilang beses lumabas ang bawat score o range ng scores.\n\nCFE Must-Know Highlights:\n- Organizes raw data into manageable visual or tabular forms."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Lists each individual score alongside its exact count.",
+    answers: ["Simple Frequency Distribution", "Grouped Frequency Distribution", "Histogram", "Bar Graph"],
+    correct: "Simple Frequency Distribution",
+    notes: "SIMPLE FREQUENCY DISTRIBUTION\nIsa-isang nililista ang bawat score kasama ang exact frequency o bilang ng nakakuha nito.\n\nPractical Example:\nTallying how many students got scores of 10, 11, 12, etc., on a short quiz.\n\nCFE Must-Know Highlights:\n- Best used when the range of scores is relatively small."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Collapses raw scores into class intervals.",
+    answers: ["Simple Frequency Distribution", "Grouped Frequency Distribution", "Frequency Polygon", "Scatterplot"],
+    correct: "Grouped Frequency Distribution",
+    notes: "GROUPED FREQUENCY DISTRIBUTION\nPinapangkat ang mga scores sa ranges o class intervals (tulad ng 80–89) para mas madaling basahin at i-summarize.\n\nPractical Example:\nGrouping test scores into ranges like 80–89, 70–79, and 60–69 to summarize a large class performance.\n\nCFE Must-Know Highlights:\n- Ideal when dealing with a wide range of continuous or large dataset scores."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Vertical bars touching each other used for continuous data.",
+    answers: ["Bar Graph", "Histogram", "Frequency Polygon", "Scatterplot"],
+    correct: "Histogram",
+    notes: "HISTOGRAM\nBar graph na magkakadikit ang bars kasi continuous o tuloy-tuloy ang data na kinakatawan nito.\n\nCFE Must-Know Highlights:\n- Bars touch each other (no spaces).\n- Used specifically for continuous interval/ratio data."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Distinct bars separated by space used for categorical (nominal/ordinal) data.",
+    answers: ["Bar Graph", "Histogram", "Frequency Polygon", "Scatterplot"],
+    correct: "Bar Graph",
+    notes: "BAR GRAPH\nGraph na may agwat o espasyo sa pagitan ng bars dahil magkahiwalay at discrete na kategorya ang kinakatawan nito.\n\nCFE Must-Know Highlights:\n- Bars do NOT touch each other.\n- Used for discrete nominal or ordinal categorical data."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "A continuous line connecting midpoints of score frequencies.",
+    answers: ["Histogram", "Bar Graph", "Frequency Polygon", "Scatterplot"],
+    correct: "Frequency Polygon",
+    notes: "FREQUENCY POLYGON\nLine graph na binubuo sa pamamagitan ng pagkokonekta ng mga midpoints ng score frequencies gamit ang tuloy-tuloy na linya.\n\nCFE Must-Know Highlights:\n- Useful for overlaying and comparing two or more distributions."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Indicates the average or middle point of a distribution.",
+    answers: ["Measures of Central Tendency", "Measures of Variability", "Standard Scores", "Correlation"],
+    correct: "Measures of Central Tendency",
+    notes: "MEASURES OF CENTRAL TENDENCY\nMga statistical indices na ginagamit para mahanap ang gitna, average, o pinakakinatawang score ng buong grupo.\n\nCFE Must-Know Highlights:\n- Includes Mean, Median, and Mode."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "The sum of all scores divided by the total number of scores (Formula: ΣX / n).",
+    answers: ["Arithmetic Mean", "Median", "Mode", "Range"],
+    correct: "Arithmetic Mean",
+    notes: "ARITHMETIC MEAN (X̄ or μ)\n'Yung karaniwang average na nakukuha sa pamamagitan ng pag-add ng lahat ng scores at pag-divide sa kabuuang bilang ng tao.\n\nPractical Example:\nCalculating the average score of a class on a mid-term exam to gauge overall baseline performance.\n\nCFE Must-Know Highlights:\n- Formula: Mean = ΣX / n\n- Most sensitive measure of central tendency; heavily affected by extreme scores (outliers)."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "The exact middle score when data points are arranged in ascending or descending order.",
+    answers: ["Arithmetic Mean", "Median", "Mode", "Variance"],
+    correct: "Median",
+    notes: "MEDIAN\nAng gitnang-gitnang score kapag inihanay ang data mula pinakamababa hanggang pinakamataas (50th percentile).\n\nPractical Example:\nFinding the middle salary in a company to evaluate fair pay without skewed distortion from high executive salaries.\n\nCFE Must-Know Highlights:\n- Best measure of central tendency for skewed distributions or ordinal data.\n- Not affected by extreme outliers."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "The most frequently occurring score in a dataset.",
+    answers: ["Arithmetic Mean", "Median", "Mode", "Standard Deviation"],
+    correct: "Mode",
+    notes: "MODE\nAng score na pinakamadalas lumabas o may pinakamataas na frequency sa isang dataset.\n\nPractical Example:\nIdentifying the most common error made by students on a psychological assessment item.\n\nCFE Must-Know Highlights:\n- Only measure of central tendency applicable to nominal data.\n- A distribution can be unimodal, bimodal, or multimodal."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Reflects how scattered or dispersed scores are around the central tendency.",
+    answers: ["Measures of Central Tendency", "Measures of Variability", "Standard Scores", "Correlation"],
+    correct: "Measures of Variability",
+    notes: "MEASURES OF VARIABILITY\nNagsasaad kung gaano kalat, kalayo, o kaiba-iba ang mga scores mula sa isa't isa o mula sa average.\n\nCFE Must-Know Highlights:\n- Includes Range, IQR, Variance, and Standard Deviation."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "The difference between the highest score and lowest score (Formula: Highest - Lowest).",
+    answers: ["Range", "Interquartile Range", "Variance", "Standard Deviation"],
+    correct: "Range",
+    notes: "RANGE\nAng simpleng distansya sa pagitan ng pinakamataas at pinakamababang score (Highest Score - Lowest Score).\n\nPractical Example:\nDetermining the spread of stress scores in a pilot study (Highest score = 95, Lowest = 40; Range = 55).\n\nCFE Must-Know Highlights:\n- Quickest but crudest measure of variability.\n- Extremely sensitive to extreme scores."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Quartiles divide a distribution into four equal parts. IQR measures the spread of the middle 50% of scores (Formula: Q3 - Q1).",
+    answers: ["Range", "Interquartile Range (IQR)", "Variance", "Standard Deviation"],
+    correct: "Interquartile Range (IQR)",
+    notes: "QUARTILES & INTERQUARTILE RANGE (IQR)\nHinati ang data sa apat na bahagi (Q1, Q2, Q3). Ang IQR naman ay ang sukat ng kalat ng gitnang 50% ng mga scores (Q3 - Q1).\n\nPractical Example:\nEvaluating the middle range of test completion times to exclude extreme outliers.\n\nCFE Must-Know Highlights:\n- Resistant to extreme scores/outliers."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "The mean of the squared deviation scores from the mean.",
+    answers: ["Range", "Interquartile Range", "Variance (s²)", "Standard Deviation"],
+    correct: "Variance (s²)",
+    notes: "VARIANCE (s²)\nAng average ng mga naka-square na distansya (deviations) ng bawat score mula sa mean.\n\nCFE Must-Know Highlights:\n- Expressed in squared units, making it less intuitively useful in direct test interpretation than Standard Deviation."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "The square root of the variance; reflects average distance of scores from the mean.",
+    answers: ["Range", "Interquartile Range", "Variance", "Standard Deviation (s or σ)"],
+    correct: "Standard Deviation (s or σ)",
+    notes: "STANDARD DEVIATION (s or σ)\nAng square root ng variance. Ito ang pinakagamiting sukat ng kalat ng scores—nagpapakita kung gaano karaniwang malayo ang mga scores mula sa average.\n\nPractical Example:\nComparing two classes with the same mean score (Mean = 75). Class A (SD = 2) performed uniformly, while Class B (SD = 12) had widely scattered abilities.\n\nCFE Must-Know Highlights:\n- Most stable and widely used measure of variability in psychometrics."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Indicates asymmetry in data distribution.",
+    answers: ["Skewness", "Kurtosis", "Variance", "Correlation"],
+    correct: "Skewness",
+    notes: "SKEWNESS\nNagsasaad ng pagiging hindi pantay o kawalan ng simetriya ng hugis ng distribution (kung saan nakatagay o humahaba ang buntot).\n\nCFE Must-Know Highlights:\n- Refers to the symmetry of a distribution."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Trailing tail extends toward the high end (right); relatively few high scores.",
+    answers: ["Positively Skewed", "Negatively Skewed", "Leptokurtic", "Platykurtic"],
+    correct: "Positively Skewed",
+    notes: "POSITIVELY SKEWED\nMarami ang mababang scores (naka-ipon sa kaliwa) at kakaunti lang ang matataas na scores, kaya humahaba ang buntot sa kanan (positive side).\n\nPractical Example:\nResults from an exceptionally difficult exam where most students score low and very few score high.\n\nCFE Must-Know Highlights:\n- Tail points to the RIGHT.\n- Order of central tendency: Mean > Median > Mode."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Trailing tail extends toward the low end (left); relatively few low scores.",
+    answers: ["Positively Skewed", "Negatively Skewed", "Leptokurtic", "Platykurtic"],
+    correct: "Negatively Skewed",
+    notes: "NEGATIVELY SKEWED\nMarami ang matataas na scores (naka-ipon sa kanan) at kakaunti lang ang mababang scores, kaya humahaba ang buntot sa kaliwa (negative side).\n\nPractical Example:\nResults from a very easy test where most students score near maximum and only a few score poorly.\n\nCFE Must-Know Highlights:\n- Tail points to the LEFT.\n- Order of central tendency: Mode > Median > Mean."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Describes the steepness or peakedness at the center of a curve.",
+    answers: ["Skewness", "Kurtosis", "Variance", "Standard Score"],
+    correct: "Kurtosis",
+    notes: "KURTOSIS\nSukat ng pagiging matulis (peakedness) o pagiging patag (flatness) ng gitna ng distribution graph.\n\nCFE Must-Know Highlights:\n- Describes the flatness or peakedness of a distribution."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Highly peaked with thick tails (high kurtosis).",
+    answers: ["Leptokurtic", "Platykurtic", "Mesokurtic", "Positively Skewed"],
+    correct: "Leptokurtic",
+    notes: "LEPTOKURTIC\nSobrang tulis ng gitna ng distribution dahil sobrang magkakatabi o nakatumpok ang mga scores sa gitna.\n\nPractical Example:\nA trait heavily clustered around a specific median value with few variation extremes.\n\nCFE Must-Know Highlights:\n- High peak, thin/narrow distribution."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Relatively flat distribution (low kurtosis).",
+    answers: ["Leptokurtic", "Platykurtic", "Mesokurtic", "Negatively Skewed"],
+    correct: "Platykurtic",
+    notes: "PLATYKURTIC\nMedyo patag, malapad, at mababa ang hugis ng distribution graph dahil malawak ang kalat ng scores.\n\nPractical Example:\nA wide spread of scores with no pronounced central cluster.\n\nCFE Must-Know Highlights:\n- Flat peak, wide spread of values."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Moderate peak; typical of normal bell-shaped distributions.",
+    answers: ["Leptokurtic", "Platykurtic", "Mesokurtic", "Bimodal"],
+    correct: "Mesokurtic",
+    notes: "MESOKURTIC\nKatamtaman lang ang tulis; katangian ng normal na bell-shaped curve.\n\nCFE Must-Know Highlights:\n- Normal curve kurtosis level."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Convert raw scores into standardized units with predetermined means and standard deviations for uniform comparison.",
+    answers: ["Standard Scores", "Raw Scores", "Class Intervals", "Percentiles"],
+    correct: "Standard Scores",
+    notes: "STANDARD SCORES\nCo-converted na mga raw scores tungo sa standardized units (may fixed Mean at SD) para maging patas at madali ang pagkumpara sa iba't ibang tests.\n\nCFE Must-Know Highlights:\n- Allows direct comparison of performances across different scales or tests."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Expresses how many standard deviations a score lies above or below the mean (Mean = 0, SD = 1; Formula: z = (X - μ) / σ).",
+    answers: ["z-score", "T-score", "Stanine", "Percentile Rank"],
+    correct: "z-score",
+    notes: "Z-SCORE\nStandard score na nagpapakita kung ilang standard deviation ang layo ng score sa mean (Mean = 0, SD = 1).\n\nPractical Example:\nConverting a raw score of 650 on an entrance exam (Mean = 500, SD = 100) yields a z-score of +1.5.\n\nCFE Must-Know Highlights:\n- Formula: z = (X - μ) / σ\n- Positive z-score = above mean; Negative z-score = below mean."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Scale with an arbitrarily assigned mean of 50 and standard deviation of 10 (Formula: T = 50 + 10z).",
+    answers: ["z-score", "T-score", "Stanine", "Percentile Rank"],
+    correct: "T-score",
+    notes: "T-SCORE\nStandard score system na may Mean = 50 at SD = 10, ginawa para maiwasan ang negative numbers at decimals.\n\nPractical Example:\nTranslating a z-score of +1.5 into a T-score gives 50 + 10(1.5) = 65. Commonly used in personality assessments like MMPI.\n\nCFE Must-Know Highlights:\n- Formula: T = 50 + 10(z)\n- No negative values."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Short for 'standard nine'; divides a distribution into 9 units (1 to 9) where each unit covers half a standard deviation in width.",
+    answers: ["z-score", "T-score", "Stanine", "Percentile Rank"],
+    correct: "Stanine",
+    notes: "STANINE\nShort for \"Standard Nine\". Hinahati ang buong distribution sa 9 na simpleng antas (1 hanggang 9), kung saan ang Mean = 5 at SD = 2.\n\nPractical Example:\nStandardized educational testing reports placing a student's reading skill at Stanine 7 (Above Average).\n\nCFE Must-Know Highlights:\n- Single-digit scale from 1 to 9."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Indicates the percentage of scores falling below a given raw score.",
+    answers: ["z-score", "T-score", "Stanine", "Percentile Rank"],
+    correct: "Percentile Rank",
+    notes: "PERCENTILE / PERCENTILE RANK\nNagsasaad kung ilang porsyento ng tao sa norm group ang nakakuha ng score na mas mababa sa isang partikular na raw score.\n\nPractical Example:\nScoring at the 84th percentile on a clinical assessment means performing higher than 84% of the norm group.\n\nCFE Must-Know Highlights:\n- Ordinal scale property.\n- 50th percentile = Median."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Measures the direction and strength of the linear relationship between two variables.",
+    answers: ["Correlation", "Central Tendency", "Kurtosis", "Variance"],
+    correct: "Correlation",
+    notes: "CORRELATION\nSinusukat ang direksyon (positive/negative) at lakas (strength: -1.00 to +1.00) ng linear na ugnayan sa pagitan ng dalawang variables.\n\nCFE Must-Know Highlights:\n- Correlation does NOT imply causation."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Used for linear relationships between two continuous variables.",
+    answers: ["Pearson r (Product-Moment Correlation)", "Spearman's Rho (ρ)", "Point-Biserial", "Phi Coefficient"],
+    correct: "Pearson r (Product-Moment Correlation)",
+    notes: "PEARSON r (PRODUCT-MOMENT CORRELATION)\nGinagamit kapag parehong continuous (interval or ratio) ang dalawang variables na gustong ikumpara.\n\nPractical Example:\nCorrelating students' study hours with their exam performance scores.\n\nCFE Must-Know Highlights:\n- Requires continuous data and linear relationship."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Used for ordinal/ranked data or small sample sizes (n < 30).",
+    answers: ["Pearson r", "Spearman's Rho (ρ)", "Variance", "z-score"],
+    correct: "Spearman's Rho (ρ)",
+    notes: "SPEARMAN'S RHO (ρ)\nGinagamit kapag naka-rank (ordinal scale) ang data o kapag maliit lang ang sample size (n < 30).\n\nPractical Example:\nCorrelating class ranks in high school with class ranks in college entrance evaluations.\n\nCFE Must-Know Highlights:\n- Non-parametric measure used for ranked/ordinal data."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "A graphical plotting of X and Y coordinate pairs showing direction, strength, and pattern of a relationship.",
+    answers: ["Scatterplot", "Histogram", "Bar Graph", "Frequency Polygon"],
+    correct: "Scatterplot",
+    notes: "SCATTERPLOT\nIsang graph na binubuo ng mga dots (X at Y coordinates) para visual na makita ang pattern, direksyon, at lakas ng relasyon ng dalawang variables.\n\nCFE Must-Know Highlights:\n- Graphical representation of bivariate data/correlation."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "A statistical technique combining numerical findings across multiple research studies to estimate an overall effect size.",
+    answers: ["Meta-analysis", "Factor Analysis", "Item Analysis", "Variance Analysis"],
+    correct: "Meta-analysis",
+    notes: "META-ANALYSIS\nIsang statistical technique na pinagsasama-sama ang mga resulta mula sa maraming magkakahiwalay na pag-aaral/research para makuha ang pangkalahatang epekto o trend.\n\nPractical Example:\nCombining results from 30 independent clinical trials to determine the general effectiveness of Cognitive Behavioral Therapy (CBT) for depression.\n\nCFE Must-Know Highlights:\n- Synthesizes quantitative findings across multiple studies."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 03",
+    question: "Quantifies the magnitude or strength of the difference between groups or treatments.",
+    answers: ["Effect Size", "p-value", "Standard Error", "Confidence Interval"],
+    correct: "Effect Size",
+    notes: "EFFECT SIZE\nSukat na nagpapakita kung gaano kalaki o katindi ang totoong epekto o pagkakaiba ng dalawang grupo o treatment.\n\nPractical Example:\nMeasuring how much better a therapy treatment group performed compared to a control group in clinical trials.\n\nCFE Must-Know Highlights:\n- Indicates practical significance, not just statistical significance."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Any distinguishable, relatively enduring way in which one individual varies from another.",
+    answers: ["Trait", "State", "Construct", "Error Variance"],
+    correct: "Trait",
+    notes: "Paliwanag: Ito 'yung long-term o medyo permanent na personality feature ng isang tao na dahilan kung bakit tayo iba-iba.\n\nReal-Life Situation: Si Mark ay bata pa lang, kilala na siyang sobrang tahimik at reserved. Kahit nag-college at nagka-trabaho na siya, ganun pa rin ang personality niya kasi trait niya ang pagiging introvert."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Also distinguish one person from another but are relatively less enduring.",
+    answers: ["Trait", "State", "Construct", "Overt Behavior"],
+    correct: "State",
+    notes: "Paliwanag: Temporary feeling o mood lang na mabilis mawala o magbago.\n\nReal-Life Situation: Si Sarah ay sobrang kalmadong tao, pero ngayong araw ay sobrang balisa at pawisan siya kasi nakatakdang mag-present sa harap ng boss niya. Kapag natapos ang presentation, babalik na rin sa normal ang pakiramdam niya."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "An informed, scientific concept developed or constructed to describe or explain behavior.",
+    answers: ["Overt Behavior", "Cumulative Scoring", "Construct", "Trait"],
+    correct: "Construct",
+    notes: "Paliwanag: Scientific idea o concept na ginawa ng mga experts para ma-explain ang behavior ng tao.\n\nReal-Life Situation: Hindi natin hahawakan o makikita nang direkta ang \"Self-Esteem,\" pero pino-process natin ito bilang scientific construct para maipaliwanag kung bakit confident o shy ang isang estudyante."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Refers to an observable action or the product of an observable action, including test- or assessment-related responses.",
+    answers: ["Construct", "Overt Behavior", "Error Variance", "State"],
+    correct: "Overt Behavior",
+    notes: "Paliwanag: Kilos na kitang-kita ng mata at pwedeng ma-observe nang rekta.\n\nReal-Life Situation: Habang nag-e-exam, nakita ng proctor na nanginginig ang kamay ni Jake at paulit-ulit niyang pino-pindot ang ballpen niya."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "The assumption that the more the test taker responds in a particular direction, the higher that test taker is presumed to be on the targeted ability or trait.",
+    answers: ["Cumulative Scoring", "Error Variance", "Standardization", "Norm-Referenced Testing"],
+    correct: "Cumulative Scoring",
+    notes: "Paliwanag: Mas maraming points o tamang sagot na aligned sa dina-diagnose na trait, mas mataas ang score mo sa trait na 'yun.\n\nReal-Life Situation: Sa isang 20-item leadership test, kapag nakakuha ka ng 18/20 na sagot na pabor sa initiative at decision-making, ico-conclude ng psychologist na mataas ang leadership capacity mo."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "The objective of the test is to provide some indication of other aspects of the examinee's behavior.",
+    answers: ["Test-Related Behavior Predicts Non-Test-Related Behavior", "Testing and Assessment Benefit Society", "Fair and Unbiased Manner", "Cumulative Scoring"],
+    correct: "Test-Related Behavior Predicts Non-Test-Related Behavior",
+    notes: "Paliwanag: Ang score o behavior mo habang nagtatake ng exam ay nagse-serve bilang preview kung paano ka mag-behave sa totoong buhay.\n\nReal-Life Situation: Kung sa Job Integrity Test ay lumabas na napaka-honest mo at ayaw mo sa panlalamang, in-expect ng HR na hindi ka rin magnanakaw o maglo-loko sa kumpanya kapag natanggap ka na."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Competent test users understand the limitations of the tests they use as well as how those limitations might be compensated for by data from other sources.",
+    answers: ["Tests Have Strengths and Weaknesses", "Testing Benefits Society", "Error Variance", "Fair and Unbiased Manner"],
+    correct: "Tests Have Strengths and Weaknesses",
+    notes: "Paliwanag: Walang perfect na test; may limitations talaga ang bawat isa kaya kailangan din back-up-an ng iba pang info gaya ng interview.\n\nReal-Life Situation: Hindi lang nagdepende ang guidance counselor sa IQ score ng isang estudyante para sabihing may learning difficulty ito; nag-conduct din siya ng interview sa magulang at tiningnan ang school background nito."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Refers to a long-standing assumption that factors other than what a test attempts to measure will influence performance on the test.",
+    answers: ["Error", "Construct", "Trait", "State"],
+    correct: "Error",
+    notes: "Paliwanag: Panlabas na factors na nakaka-affect sa test score mo bukod sa actual knowledge o ability mo.\n\nReal-Life Situation: Nagkamali si Ella sa limang items sa exam hindi dahil hindi niya alam ang answer, kundi dahil biglang uminit sa kwarto at nawalan siya ng focus."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "The component of a test score attributable to sources other than the trait or ability measured.",
+    answers: ["Error Variance", "Cumulative Scoring", "Construct", "Overt Behavior"],
+    correct: "Error Variance",
+    notes: "Paliwanag: Part ng score na nanggaling sa outside reasons at hindi sa mismong sinusukat na trait.\n\nReal-Life Situation: Mababa ang nakuha mong score sa Board Exam kumpara sa Mock Board mo kasi pumasok kang puyat at sumasakit ang tiyan; ang pananakit ng tiyan at puyat ang nag-contribute sa error variance."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Testing and assessment can be conducted in a fair and unbiased manner.",
+    answers: ["Fair and Unbiased Manner", "Testing Benefits Society", "Norm-Referenced Testing", "Standardization"],
+    correct: "Fair and Unbiased Manner",
+    notes: "Paliwanag: Designed ang mga test para maging fair sa lahat, kahit magkakaiba ang background ng mga tao.\n\nReal-Life Situation: Ang ginagamit na Aptitude Test sa isang kilalang kumpanya ay walang halong tanong na pabor lang sa mga nakatira sa lungsod, para patas din ito sa mga galing sa probinsya."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "In a world without tests, personnel might be hired on the basis of nepotism rather than documented merit.",
+    answers: ["Testing and Assessment Benefit Society", "Fair and Unbiased Manner", "Criterion-Referenced Testing", "Standardization"],
+    correct: "Testing and Assessment Benefit Society",
+    notes: "Paliwanag: Malaking tulong ang psychological tests para maiwasan ang favoritism o nepotism at ma-identify kung sino talaga ang qualified sa job o kailangan ng help sa school.\n\nReal-Life Situation: Sa halip na tanggapin ang anak ng boss kahit walang alam, nagpa-qualifying exam ang kumpanya para 'yung totoong may skill at kakayahan ang makuha sa trabaho."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "The consistency of the measuring tool: the precision with which the test measures and the extent to which error is present in measurements.",
+    answers: ["Reliable", "Valid", "Useful", "Normed"],
+    correct: "Reliable",
+    notes: "Paliwanag: Consistent o pareho ang result ng test kahit paulit-ulit itong ipatake sa same person.\n\nReal-Life Situation: Nag-take ka ng Personality Test noong Lunes at nakakuha ng high score sa Conscientiousness. Pag-take mo ulit pagkaraan ng dalawang linggo, halos pareho pa rin ang lumabas na score."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "A test is considered valid for a particular purpose if it does, in fact, measure what it purports to measure.",
+    answers: ["Valid", "Reliable", "Useful", "Standardized"],
+    correct: "Valid",
+    notes: "Paliwanag: Sinusukat talaga ng test kung ano ang supposed to measure nito at hindi ibang bagay.\n\nReal-Life Situation: Ang binigay na Driving Written Exam ay naglalaman lang ng mga traffic rules at road signs, at hindi hinaluan ng mahihirap na Science o Literature questions."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "A good test is a useful test, one that yields actionable results that will ultimately benefit individual test takers or society at large.",
+    answers: ["Useful", "Valid", "Reliable", "Stratified"],
+    correct: "Useful",
+    notes: "Paliwanag: Useful at may practical application ang lalabas na result.\n\nReal-Life Situation: Ang resulta ng Career Assessment Test ay nakatulong sa isang High School student para makapili ng tamang kurso sa College na angkop sa strengths niya."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Refers to behavior that is usual, average, normal, standard, expected, or typical. In a psychometric context, these are test performance data of a particular group of testtakers used as a reference.",
+    answers: ["Norm", "Norming", "Standardization", "Criterion"],
+    correct: "Norm",
+    notes: "Paliwanag: Ang average score o baseline ng isang specific group of people na ginagawang reference point.\n\nReal-Life Situation: Nalaman ng guro na ang average score ng Grade 10 sa Math exam ay 75. Ang \"75\" na ito ang ginagawang norm para malaman kung sino ang higit na magaling o kailangan pa ng tulong."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Refers to the process of deriving norms. It may be modified to describe a particular type of norm derivation.",
+    answers: ["Norming", "Standardization", "Sampling", "Stratification"],
+    correct: "Norming",
+    notes: "Paliwanag: Ang mismong process ng pag-collect ng data para makabuo ng norms.\n\nReal-Life Situation: Bago ilabas ang isang bagong IQ test, pinatake muna ito ng mga researchers sa 5,000 estudyante sa buong bansa para makakolekta ng data at makabuo ng average scoring tables."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "The process of administering a test to a representative sample of testtakers for the purpose of establishing norms.",
+    answers: ["Standardization", "Norming", "Cumulative Scoring", "Sampling"],
+    correct: "Standardization",
+    notes: "Paliwanag: Ang pag-administer ng test nang may strict and uniform rules (same instructions, timing, scoring) sa isang representative group para makabuo ng accurate norms.\n\nReal-Life Situation: Sa Bar Exam, eksaktong 8:00 AM binibigay ang papel, pareho ang timer sa lahat ng room, at bawal magdagdag ng oras ang kahit sinong proctor para maging pantay-pantay ang testing conditions."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "A method of evaluation and a way of deriving meaning from test scores by evaluating an individual testtaker's score and comparing it to scores of a group of testtakers.",
+    answers: ["Norm-Referenced Testing", "Criterion-Referenced Testing", "Fixed-Referenced Group Scoring System", "Cumulative Scoring"],
+    correct: "Norm-Referenced Testing",
+    notes: "Paliwanag: Ini-evaluate at ikinokompara ang score ng isang tao sa scores ng ibang test-takers para malaman ang ranking niya.\n\nReal-Life Situation: Sa NMAT (National Medical Admission Test), hiningi ang score mo para makita kung kabilang ka sa Top 10% ng lahat ng kumuha ng exam sa buong Pilipinas."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Used to document specific skills rather than to compare people.",
+    answers: ["Criterion-Referenced Testing", "Norm-Referenced Testing", "Fixed-Referenced Group Scoring System", "Purposive Sampling"],
+    correct: "Criterion-Referenced Testing",
+    notes: "Paliwanag: Mina-match ang score mo sa isang cut-off o set standard, walang pakialam sa score ng iba.\n\nReal-Life Situation: Sa isang CPR Certification Exam, kailangan mo lang makakuha ng 85% pataas para maging certified, kahit pa 100% o 85% din ang makuha ng mga kasama mo."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "The distribution of scores obtained on the test from one group of testtakers is used as the basis for the calculation of test scores for future administrations.",
+    answers: ["Fixed-Referenced Group Scoring System", "Norm-Referenced Testing", "Criterion-Referenced Testing", "Subgroup Norms"],
+    correct: "Fixed-Referenced Group Scoring System",
+    notes: "Paliwanag: Ginagamit ang score baseline ng isang past group bilang permanent reference group para sa mga susunod na batch na magtatake.\n\nReal-Life Situation: Ang SAT scores ngayon ay ikinokompara pa rin sa baseline data na binuo mula sa isang malaking batch ng test-takers noong 1990s para pantay ang pamantayan sa nakalipas na mga taon."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "The process of selecting the portion of the universe deemed to be representative of the whole population.",
+    answers: ["Sampling", "Stratified Sampling", "Convenience Sampling", "Purposive Sampling"],
+    correct: "Sampling",
+    notes: "Paliwanag: Ang pagkuha lang ng part o portion mula sa kabuuang population.\n\nReal-Life Situation: Sa halip na i-test ang lahat ng 10,000 students sa university, kumuha lang ang researcher ng 500 students bilang sample."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Divides the population into subgroups and selects from each.",
+    answers: ["Stratified Sampling", "Random Stratified Sampling", "Purposive Sampling", "Convenience Sampling"],
+    correct: "Stratified Sampling",
+    notes: "Paliwanag: Hina-hati muna ang population sa different subgroups (like age o gender) bago pumili ng participants.\n\nReal-Life Situation: Hina-hati muna ng researcher ang school population sa Year Levels (1st Year, 2nd Year, 3rd Year, 4th Year) saka pumili ng tig-50 students sa bawat year level."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Randomly selects from different subgroups.",
+    answers: ["Random Stratified Sampling", "Stratified Sampling", "Convenience Sampling", "Purposive Sampling"],
+    correct: "Random Stratified Sampling",
+    notes: "Paliwanag: After hatiin ang population sa subgroups, randomly ang pag-pick ng tao sa bawat subgroup.\n\nReal-Life Situation: Pagkatapos hatiin ang students ayon sa Course (Psychology, Nursing, Business), gumamit ng bunutan o wheel of names ang researcher para pumili ng mga kakausapin sa bawat course."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Selects a specific group based on characteristics.",
+    answers: ["Purposive Sampling", "Convenience Sampling", "Stratified Sampling", "Random Stratified Sampling"],
+    correct: "Purposive Sampling",
+    notes: "Paliwanag: Sadyang nagse-select lang ng people na may partikular na target characteristics na kailangan sa study.\n\nReal-Life Situation: Pumili lang ang researcher ng mga respondents na mayroong higit 5 taon na karanasan sa BPO Industry kasi 'yun ang requirement ng study niya."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Selects participants based on ease of access.",
+    answers: ["Convenience Sampling", "Purposive Sampling", "Stratified Sampling", "Random Stratified Sampling"],
+    correct: "Convenience Sampling",
+    notes: "Paliwanag: Pumipili ng participants base sa kung sino lang ang pinakamadaling i-access o lapitan.\n\nReal-Life Situation: Dahil rush na ang submission, pinag-fill out mo na lang ng survey ang mga kaibigan at katabi mo sa hallway ng school."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Also known as age-equivalent scores, indicate the average performance of different samples of testtakers who were at various ages at the time the test was administered.",
+    answers: ["Age Norms", "Grade Norms", "National Norms", "Subgroup Norms"],
+    correct: "Age Norms",
+    notes: "Paliwanag: Ikinokompara ang score mo sa average performance ng people with the same age.\n\nReal-Life Situation: Tiningnan ng pedia-psychologist kung ang vocabulary score ng 6-year-old na bata ay pumapantay sa average score ng iba pang 6-year-old."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Designed to indicate the average test performance of testtakers in a given school grade.",
+    answers: ["Grade Norms", "Age Norms", "Local Norms", "National Norms"],
+    correct: "Grade Norms",
+    notes: "Paliwanag: Ikinokompara ang score sa average performance ng mga kapareho mo ng grade level.\n\nReal-Life Situation: Ang Reading Comprehension Score ng isang Grade 3 student ay ikinukumpara sa pambansang average score ng lahat ng Grade 3."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Derived from a normative sample that was nationally representative of the population at the time the norming study was conducted.",
+    answers: ["National Norms", "Local Norms", "Subgroup Norms", "Grade Norms"],
+    correct: "National Norms",
+    notes: "Paliwanag: Derived ang norms mula sa malaking sample na representative sa buong bansa.\n\nReal-Life Situation: Ang score mo sa Philippine Educational Placement Test (PEPT) ay ikinokompara sa pambansang pamantayan ng mga estudyante mula Luzon, Visayas, at Mindanao."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "A normative sample can be segmented by any of the criteria initially used in selecting subjects for the sample.",
+    answers: ["Subgroup Norms", "Local Norms", "National Norms", "Age Norms"],
+    correct: "Subgroup Norms",
+    notes: "Paliwanag: Norms na naka-focus lang sa mas specific na subgroup (like base sa gender, course, o region).\n\nReal-Life Situation: Tiningnan ang physical endurance test score ng isang female applicant kumpara sa eksklusibong average scores ng iba pang female applicants lang."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 04",
+    question: "Typically developed by test users themselves, provide normative information with respect to the local population's performance on some test.",
+    answers: ["Local Norms", "Subgroup Norms", "National Norms", "Grade Norms"],
+    correct: "Local Norms",
+    notes: "Paliwanag: Norms na gawa at ginagamit lang within a specific local area, school, o company.\n\nReal-Life Situation: Gumawa ang sarili ninyong Unibersidad ng sarili nitong entrance exam cutoff base lang sa nakaraang performance ng mga pumasok na applicants sa mismong campus ninyo."
+  },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Refers to consistency in measurement. In equation, reliability refers to the proportion of the total variance attributed to true variance.",
+        answers: ["Reliability", "Measurement error", "Systematic error", "Validity"],
+        correct: "Reliability",
+        notes: "Main Point / Explanation: Gaano ba ka-consistent o ka-stable yung results ng test mo? Kung paulit-ulit mong ibibigay ang test, halos pareho pa rin ba ang makuha nilang score?\n\nExample: Nagsukat ka ng timbang mo ngayon, 60kg. Pagbaba mo at pag-tapak mo uli sa timbangan, 60kg pa rin. Ibig sabihin, reliable yung timbangan."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Is an index of reliability, a proportion that indicates the ratio between the true score variance on a test and the total variance.",
+        answers: ["Correlation coefficient", "Reliability coefficient", "Standard error of measurement", "Variance index"],
+        correct: "Reliability coefficient",
+        notes: "Main Point / Explanation: Ito yung numero o score (usually 0 to 1) na nagpapakita kung gaano ka-reliable ang isang test.\n\nExample: Kung nakakuha ka ng reliability coefficient na .85 (Good), ibig sabihin 85% ng nakuha mong score ay galing talaga sa tunay mong kakayahan, at 15% lang ang galing sa aberya o error."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Refers to, collectively, all of the factors associated with the process of measuring some variable, other than the variable being measured.",
+        answers: ["Random error", "Systematic error", "Measurement error", "Content sampling error"],
+        correct: "Measurement error",
+        notes: "Main Point / Explanation: Lahat ng sagabal o dahilan kung bakit hindi natin nakuha yung exact o perfect score ng isang tao.\n\nExample: Nag-exam ka pero mababa nakuha mo hindi dahil bobo ka, kundi dahil sobrang ingay sa labas habang nag-eexam ka."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Is a source of error in measuring a targeted variable caused by unpredictable fluctuations and inconsistencies of other variables in the measurement process.",
+        answers: ["Random error", "Systematic error", "Scorer error", "Constant error"],
+        correct: "Random error",
+        notes: "Main Point / Explanation: Mga error na hindi mo inaasahan at bigla-bigla na lang nangyayari. Hindi mo mada-predict.\n\nExample: Bigla kang inubo habang nag-eexam, o biglang namatay yung ilaw ng 2 minutes sa testing room."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Refers to a source of error in measuring a variable that is typically constant or proportionate to what is presumed to be the true value of the variable being measured.",
+        answers: ["Random error", "Systematic error", "Item sampling error", "Unpredictable error"],
+        correct: "Systematic error",
+        notes: "Main Point / Explanation: Mga error na paulit-ulit at consistent. Palaging mali o may biyaya sa iisang direksyon lang.\n\nExample: Yung ruler na ginamit niyo sa drawing exam ay naputol pala ang dulo ng 1 inch. So lahat ng gawa ng estudyante, kulang ng 1 inch ang sukat."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Variation among items within a test as well as to variation among items between tests (item sampling / content sampling).",
+        answers: ["Test construction", "Test administration", "Test scoring and interpretation", "Test environment"],
+        correct: "Test construction",
+        notes: "Main Point / Explanation: Dito nagmumula ang error kung paano ginawa o binuo ang mga tanong.\n\nExample: Nag-review ka ng Chapter 1 to 5, pero nung lumabas ang exam, 90% ng tanong nanggaling lang sa Chapter 1. Bad item sampling yun!"
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Sources of error variance that occur during test administration may influence the test taker's attention or motivation.",
+        answers: ["Test construction", "Test administration", "Test scoring and interpretation", "Item sampling"],
+        correct: "Test administration",
+        notes: "Main Point / Explanation: Nanggagaling ang error sa mga nangyayari mismong habang itinatake ang exam.\n\nSub-terms & Examples:\nTest environment: Physical surroundings katulad ng room temperature, lighting, at noise.\nExample: Sobrang init sa room kasi sira ang electric fan, kaya pawis na pawis ka at 'di ka makapag-concentrate.\n\nTest taker's variables: Emotional problems, physical discomfort, lack of sleep, or effects of medication.\nExample: Puyat ka kasi nag-break kayo ng jowa mo kagabi, kaya blurred ang isip mo habang nag-eexam.\n\nExaminer-related variables: Physical appearance, demeanor, or departing from prescribed procedures.\nExample: Sobrang sungit at pasigaw magsalita nung proctor, kaya natatakot at nare-pressure ang mga estudyante."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Error variance caused by scorer differences, scoring criteria, or subjective evaluations of open-ended responses.",
+        answers: ["Test administration", "Test construction", "Test scoring and interpretation", "Environmental variables"],
+        correct: "Test scoring and interpretation",
+        notes: "Main Point / Explanation: Nagkakaroon ng error depende sa kung SINO at PAANO pinalalabas o tinatama ang score.\n\nExample: Sa isang essay exam, si Teacher A nagbigay ng 95/100, pero nung si Teacher B ang nagcheck ng same essay, 75/100 lang ibinigay kasi mas strict siya."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "An estimate of reliability obtained by correlating pairs of scores from the same people on two different administrations of the same test.",
+        answers: ["Test-retest reliability", "Parallel forms reliability", "Internal consistency estimate", "Inter-scorer reliability"],
+        correct: "Test-retest reliability",
+        notes: "Main Point / Explanation: Iisang test lang ang ibibigay sa iisang grupo ng tao sa magkaibang araw, tapos ikukumpara kung magkapareho ang scores.\n\nExample: Kumuha ka ng Personality Test ngayong Lunes. Pagkatapos ng dalawang linggo, kumuha ka uli ng same test. Dapat halos same pa rin ang resulta mo."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "The degree of correlation between test scores when the time interval between test administrations is greater than six months.",
+        answers: ["Coefficient of stability", "Coefficient of equivalence", "Internal consistency", "Inter-rater reliability"],
+        correct: "Coefficient of stability",
+        notes: "Main Point / Explanation: Ito ang tawag kapag ang interval o pagitan ng testing ay higit sa six months."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Two test forms where the means and variances of observed test scores are equal.",
+        answers: ["Alternate forms", "Parallel forms", "Split-half forms", "Power forms"],
+        correct: "Parallel forms",
+        notes: "Main Point / Explanation: Gumagawa ng dalawang magkaibang Set ng exam (Set A at Set B) na pareho lang ang hirap para maiwasan ang kodigo o panggagaya.\n\nExample: Ginagamit 'to sa Make-up exam. Kung wala ka nung day ng exam, bibigyan ka ni Teacher ng Set B para 'di mo manakaw ang sagot sa classmates mong nag-Set A."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Designed to be equivalent with respect to variables such as content and level of difficulty, but do not strictly meet 'parallel' requirements.",
+        answers: ["Parallel forms", "Alternate forms", "Split-half forms", "Speed forms"],
+        correct: "Alternate forms",
+        notes: "Main Point / Explanation: Designed to be equivalent with respect to variables such as content and level of difficulty, pero hindi kasing higpit ng parallel forms sa pantay na means at variances."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "The degree of correlation calculated between scores obtained on two alternate or parallel forms of a test.",
+        answers: ["Coefficient of stability", "Coefficient of equivalence", "Cronbach's alpha", "Standard error"],
+        correct: "Coefficient of equivalence",
+        notes: "Main Point / Explanation: Ang tawag sa correlation score sa pagitan ng Set A at Set B."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "An estimate of the reliability of a test obtained without developing an alternate form and without having to administer the test twice.",
+        answers: ["Test-retest reliability", "Inter-scorer reliability", "Internal consistency estimate of reliability", "Parallel-forms estimate"],
+        correct: "Internal consistency estimate of reliability",
+        notes: "Main Point / Explanation: Isang beses lang ibibigay ang test, tapos titingnan sa loob mismo ng exam kung nagkakatugma-tugma ang mga tanong sa isa't isa."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "An internal consistency measure obtained by correlating two halves of a single test (e.g., dividing a 100-item test into two 50-item tests).",
+        answers: ["Split-half reliability", "Test-retest reliability", "Inter-scorer reliability", "Alternate forms reliability"],
+        correct: "Split-half reliability",
+        notes: "Main Point / Explanation: Hinahati ang buong test sa dalawang kalahati (halimbawa: 100 items magiging dalawang 50-item tests) para ikumpara ang score ng dalawang kalahati."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A method of splitting a test into two halves by assigning odd-numbered items to one half and even-numbered items to the other half.",
+        answers: ["Odd-even reliability", "Speed test reliability", "Parallel-forms reliability", "Inter-item consistency"],
+        correct: "Odd-even reliability",
+        notes: "Main Point / Explanation: Hinahati ang test sa pamamagitan ng paghihiwalay ng Odd numbers (1, 3, 5...) at Even numbers (2, 4, 6...)."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A mathematical formula used to estimate the reliability of an entire test after it has been shortened or split into half.",
+        answers: ["Spearman-Brown formula", "Kuder-Richardson Formula (KR-20)", "Cronbach's Alpha", "Standard Error formula"],
+        correct: "Spearman-Brown formula",
+        notes: "Main Point / Explanation: Formula na ginagamit para i-adjust o i-compute uli ang reliability ng BUONG test matapos itong hatiin sa kalahati."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "The degree of correlation among all items on a scale, measuring whether all items sample the same construct.",
+        answers: ["Inter-item consistency", "Inter-scorer reliability", "Test-retest correlation", "Range inflation"],
+        correct: "Inter-item consistency",
+        notes: "Main Point / Explanation: Degree of correlation among all items on a scale."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Refers to a test structure where only a single trait or factor is being measured.",
+        answers: ["Homogeneity", "Heterogeneity", "Dynamic trait", "Static trait"],
+        correct: "Homogeneity",
+        notes: "Main Point / Explanation: Kapag ang test ay iisang trait o factor lang ang sinusukat (Example: Depression Test lang)."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Refers to a test structure that measures multiple, different traits or factors.",
+        answers: ["Homogeneity", "Heterogeneity", "Speed test", "Power test"],
+        correct: "Heterogeneity",
+        notes: "Main Point / Explanation: Kapag ang test ay maraming magkakaibang traits ang sinusukat (Example: College Entrance Exam na may Math, Science, at English)."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A statistic used to estimate internal consistency reliability for tests containing dichotomous items (e.g., Right/Wrong or True/False).",
+        answers: ["Kuder-Richardson Formula (KR-20)", "Cronbach's Alpha", "Spearman-Brown formula", "Average proportional distance"],
+        correct: "Kuder-Richardson Formula (KR-20)",
+        notes: "Main Point / Explanation: Ginagamit para sa mga Dichotomous items o yung mga tanong na Tama o Mali lang ang sagot (Right or Wrong / True or False)."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A statistic used to estimate internal consistency reliability for tests with non-dichotomous or multipoint items (e.g., Likert scales).",
+        answers: ["Coefficient Alpha (Cronbach's Alpha)", "KR-20 Formula", "Spearman-Brown formula", "Standard error"],
+        correct: "Coefficient Alpha (Cronbach's Alpha)",
+        notes: "Main Point / Explanation: Ginagamit kapag Non-dichotomous ang items o maraming pwedeng pagpilian na points (halimbawa: Likert scales like 1-Strongly Disagree to 5-Strongly Agree)."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A measure of internal consistency that focuses on the degree of difference rather than similarity among item scores.",
+        answers: ["Average proportional distance (APD)", "Cronbach's Alpha", "KR-20", "Spearman-Brown"],
+        correct: "Average proportional distance (APD)",
+        notes: "Main Point / Explanation: Tinitingnan ang degree of difference (pagkakaiba) sa halip na similarity ng item scores."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "The degree of agreement or consistency between two or more scorers (or judges, raters) with regard to a particular measure.",
+        answers: ["Inter-scorer reliability", "Test-retest reliability", "Split-half reliability", "Alternate-forms reliability"],
+        correct: "Inter-scorer reliability",
+        notes: "Main Point / Explanation: Kasunduan o pagkakatugma ng score na ibinibigay ng dalawa o higit pang judges/evaluators.\n\nExample: Sa Quiz Bee o Dance Contest, nagbibigay ng score ang 3 judges. Kapag pare-pareho silang nagbigay ng mataas na grade sa iisang contestant, mataas ang inter-scorer reliability nila."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A psychological or human trait that changes easily depending on the situation or time.",
+        answers: ["Dynamic characteristic", "Static characteristic", "Homogeneous trait", "Heterogeneous trait"],
+        correct: "Dynamic characteristic",
+        notes: "Main Point / Explanation: Isang katangian na madaling magbago depende sa sitwasyon o oras.\n\nExample: Mood, Stress levels, or Motivation (pwedeng masaya ka ngayon, malungkot mamaya)."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A psychological or human trait that is relatively enduring and stable over a long period of time.",
+        answers: ["Dynamic characteristic", "Static characteristic", "Random error", "Dichotomous trait"],
+        correct: "Static characteristic",
+        notes: "Main Point / Explanation: Katangian na matatag at hindi basta-basta nagbabago sa mahabang panahon.\n\nExample: Intelligence (IQ) o Long-term Personality traits."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A situation where a low variance in sample scores leads to a reduced or lowered reliability coefficient.",
+        answers: ["Restriction of range", "Inflation of range", "Measurement error", "Random error"],
+        correct: "Restriction of range",
+        notes: "Main Point / Explanation: Kapag sobrang onti o liit ng pagkakaiba-iba (variance) ng mga scores, kaya bumababa ang lalabas na reliability coefficient.\n\nExample: Nagpa-exam ka sa klase kung saan LAHAT ng estudyante ay genius."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A situation where a widely varied set of scores (extreme scores) artificially increases the reliability coefficient.",
+        answers: ["Restriction of range", "Inflation of range", "Systematic error", "Homogeneity"],
+        correct: "Inflation of range",
+        notes: "Main Point / Explanation: Kapag sobrang lakas ng pagkakaiba ng mga scores (mixed extremes), kaya tumataas ang reliability coefficient."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A test containing very easy items where the primary challenge is completing as many items as possible within a very brief time limit.",
+        answers: ["Speed test", "Power test", "Criterion-referenced test", "Norm-referenced test"],
+        correct: "Speed test",
+        notes: "Main Point / Explanation: Sobrang dadali ng tanong, pero napaka-ikli ng oras na ibinigay para matapos.\n\nExample: 100 items ng Basic Addition (1+1, 2+3) pero 2 minutes lang ang time limit."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A test with a generous or sufficient time limit, but with items that progressively increase in difficulty.",
+        answers: ["Speed test", "Power test", "Criterion-referenced test", "Dynamic test"],
+        correct: "Power test",
+        notes: "Main Point / Explanation: May sapat o mahabang oras, pero pataas nang pataas ang hirap ng mga tanong.\n\nExample: Math Olympiad exam kung saan binigyan ka ng 3 hours para sagutan ang 5 sobrang hiro-hirap na problems."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Designed to provide an indication of where a test taker stands with respect to some variable or criterion, such as an educational or vocational objective.",
+        answers: ["Norm-referenced tests", "Criterion-referenced tests", "Speed tests", "Power tests"],
+        correct: "Criterion-referenced tests",
+        notes: "Main Point / Explanation: Ini-score ka batay sa kung naabot mo ang passing standard, HINDI batay sa score ng ibang tao.\n\nExample: Driving Test. Kailangan makakuha ka ng passing score para makapasa at makakuha ng license, kahit pa lahat ng kasabay mo ay bumagsak."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Also referred to as the true score model. CTT notion that everyone has a 'true score' on a test.",
+        answers: ["Classical Test Theory (CTT)", "Item Response Theory (IRT)", "Generalizability Theory", "Domain Sampling Theory"],
+        correct: "Classical Test Theory (CTT)",
+        notes: "Main Point / Explanation: Naniniwala na ang bawat NAKUHANG score mo (Observed Score) ay binubuo ng iyong True Score plus Measurement Error.\n\nObserved Score = True Score + Error"
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A value that genuinely reflects an individual's ability (or trait) level as measured by a particular test.",
+        answers: ["Observed score", "True score", "Error variance", "Standard error"],
+        correct: "True score",
+        notes: "Main Point / Explanation: Ang tunay mong kakayahan kapag tinanggal ang lahat ng malas, ingay, o aberya sa paligid."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A theoretical framework assuming that test items are drawn as a sample from a larger, total pool of items representing a domain.",
+        answers: ["Domain Sampling Theory", "Classical Test Theory", "Generalizability Theory", "Item Response Theory"],
+        correct: "Domain Sampling Theory",
+        notes: "Main Point / Explanation: Ang test questions ay pa-sample lang mula sa napakalaking pool ng kaalaman (domain). Mas maraming tanong mula sa domain, mas accurate ang score."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A framework that evaluates how different testing conditions (e.g., time, environment, administrator) affect test performance and scores.",
+        answers: ["Generalizability Theory", "Domain Sampling Theory", "Item Response Theory", "Classical Test Theory"],
+        correct: "Generalizability Theory",
+        notes: "Main Point / Explanation: Tinitingnan kung paano naaapektuhan ng iba't ibang testing conditions (oras, lugar, nagpapatest) ang score at kung pwedeng i-apply ang result sa pangkalahatan."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A system of testing models that focuses on individual item characteristics and the probability of a test taker answering each item correctly based on their ability.",
+        answers: ["Item Response Theory (IRT)", "Classical Test Theory (CTT)", "Generalizability Theory", "Domain Sampling Theory"],
+        correct: "Item Response Theory (IRT)",
+        notes: "Main Point / Explanation: Nagfo-focus sa bawat ISANG tanong (item) at sa abilidad ng tao. Tinitingnan ang tsansa o probability na masagutan mo nang tama ang isang item batay sa galing mo."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "Is the tool used to estimate or infer the extent to which an observed score deviates from a true score.",
+        answers: ["Standard Error of Measurement (SEM)", "Standard Error of the Difference (SED)", "Reliability coefficient", "Variance ratio"],
+        correct: "Standard Error of Measurement (SEM)",
+        notes: "Main Point / Explanation: Sukat kung gaano kalayo ang nakatala mong score sa TUNAY mong score. Mas MALIIT na SEM = Mas exact at accurate ang exam."
+    },
+    {
+        type: "quiz",
+        category: "LESSON 05-6",
+        question: "A statistical measure that can aid a test user in determining how large a difference should be before it is considered statistically significant.",
+        answers: ["Standard Error of Measurement (SEM)", "Standard Error of the Difference (SED)", "Coefficient of Stability", "Coefficient of Equivalence"],
+        correct: "Standard Error of the Difference (SED)",
+        notes: "Main Point / Explanation: Ginagamit para malaman kung ang pagkakaiba ng dalawang score ay TALAGANG totoong pagbabago ba o dala lang ng tsamba/error.\n\nExample: Si Student A nakakuha ng 85, si Student B nakakuha ng 86. Ginamitan ito ng SED para malaman kung talagang mas matalino si B kay A, o baka swerte lang sa hula si B."
+    },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "Is a judgment or estimate of how well a test measures what it purports to measure in a particular context.",
+    answers: ["Validation", "Validity", "Reliability", "Construct"],
+    correct: "Validity",
+    notes: "Main Point / Explanation: Ito ang pagsukat kung TAMA o AKMA ba talaga ang ginawa mong test sa gusto mong sukatin.\n\nExample: Kung Math exam ang ibinigay mo pero puro English Grammar ang tanong, walang validity ang test na 'yon para sa Math."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "Is the process of gathering and evaluating evidence about validity.",
+    answers: ["Validity", "Reliability", "Standardization", "Validation"],
+    correct: "Validation",
+    notes: "Main Point / Explanation: Ito ang MISMONG PROSESO ng pag-imbestiga o pangangalap ng ebidensya para maipakita na gumagana at valid ang test mo."
+  },
+  {
+    type: "note",
+    category: "LESSON 07",
+    question: "Reliability vs. Validity",
+    notes: "<b>Tandaan:</b> \"All valid tests are reliable, but not all reliable tests are valid.\"\n\n• <b>Reliable & Valid:</b> Consistent ang score AT tama ang sinusukat (Ideal test).\n• <b>Reliable pero Not Valid:</b> Consistent ang score PERO mali ang sinusukat.\n• <b>Not Reliable & Not Valid:</b> Pabago-bago ang score kaya hindi rin pwedeng maging valid.\n\n<b>Halimbawa:</b> Kung ang timbangan mo sa bahay ay laging sobra ng 5kg tuwing tatapak ka, RELIABLE sya (kasi parehong 5kg sobra lagi) pero NOT VALID (kasi mali ang binibigay na totoong timbang mo)."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "Measure of validity based on an evaluation of the subjects, topics, or content covered by the items in the test.",
+    answers: ["Criterion Validity", "Content Validity", "Construct Validity", "Face Validity"],
+    correct: "Content Validity",
+    notes: "Main Point / Explanation: Tinitingnan dito kung kumpleto ba at kasama lahat ng pinag-aralang topics sa mga tanong ng exam.\n\nExample: Kung nag-review kayo mula Chapter 1 hanggang 5, dapat may tanong sa lahat ng chapters na 'yon. Kapag puro Chapter 1 lang ang lumabas sa exam, mababa ang Content Validity nito."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "Measure of validity obtained by evaluating the relationship of scores obtained on the test to scores on other tests or measures.",
+    answers: ["Content Validity", "Construct Validity", "Criterion Validity", "Ecological Validity"],
+    correct: "Criterion Validity",
+    notes: "Main Point / Explanation: Inihahambing ang score sa test laban sa isa pang totoong pamantayan o resulta (na tinatawag na criterion).\n\nExample: Pinagkukumpara ang score mo sa Job Applicant Test laban sa totoong performance mo sa trabaho pagkatapos ng 6 months."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "A type of criterion validity where the test score and the criterion measure are obtained at the same time.",
+    answers: ["Predictive Validity", "Concurrent Validity", "Incremental Validity", "Construct Validity"],
+    correct: "Concurrent Validity",
+    notes: "Main Point / Explanation: Sabay na kukunin ang test score at ang criterion measure NANG MAGKASABAY.\n\nExample: Pinatake mo ng bagong Depression Test ang pasyente habang sabay mo ring tinitingnan ang kasalukuyang diagnosis sa kanya ng doktor ngayon."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "A type of criterion validity where the test score is obtained now, while the criterion is measured over time.",
+    answers: ["Concurrent Validity", "Incremental Validity", "Construct Validity", "Predictive Validity"],
+    correct: "Predictive Validity",
+    notes: "Main Point / Explanation: Kukunin ang test score NGAYON para hulaan ang mangyayari o performance sa HINAHARAP.\n\nExample: Ang Entrance Exam score mo ngayong taon ay ginagamit para hulaan kung magiging mataas ba ang GPA mo pagdating ng College."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "Refers to the rate or percentage of occurrence of a trait in the general population.",
+    answers: ["Base Rate", "Hit Rate", "Miss Rate", "False Positive Rate"],
+    correct: "Base Rate",
+    notes: "Main Point / Explanation: Gaano ba kadalas o karami ang isang katangian o sakit sa pangkalahatang populasyon?\n\nExample: Kung 5% lang ng mga tao sa Pilipinas ang may ADHD, ang 5% na 'yon ang tinatawag na Base Rate."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "The percentage of correct or accurate predictions made by a test.",
+    answers: ["Base Rate", "Miss Rate", "Hit Rate", "False Positive Rate"],
+    correct: "Hit Rate",
+    notes: "Main Point / Explanation: Ilang porsyento ang TAMA at TUMPAK na nahulaan ng test mo.\n\nExample: Sinabi ng test na papasa ang 10 estudyante, at nung nag-exam sila ay TALAGANG PUMASA silang 10."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "The percentage of incorrect or inaccurate predictions made by a test.",
+    answers: ["Base Rate", "Hit Rate", "False Positive Rate", "Miss Rate"],
+    correct: "Miss Rate",
+    notes: "Main Point / Explanation: Ilang porsyento naman ang MALI o SUMABLAY sa hula ng test mo."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "An error where a trait is predicted to be present, but in reality, it is actually absent.",
+    answers: ["False Negative", "False Positive", "Hit Rate", "Miss Rate"],
+    correct: "False Positive",
+    notes: "Main Point / Explanation: Akala ng test MERON, pero sa totoo pala ay WALA naman.\n\nExample: Nag-COVID test ka at lumabas na Positive ka, pero nung nagpa-PCR re-test ka ay Negative ka naman pala talaga."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "An error where a trait is predicted to be absent, but in reality, it is actually present.",
+    answers: ["False Negative", "False Positive", "Hit Rate", "Miss Rate"],
+    correct: "False Negative",
+    notes: "Main Point / Explanation: Akala ng test WALA, pero sa totoo pala ay MERON pala talaga.\n\nExample: Sinabi sa pregnancy test na Negative ka, pero buntis ka na pala talaga sa totoo lang."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "Occurs when the person measuring the criterion is influenced by the results of the predictor test.",
+    answers: ["Test Bias", "Criterion Contamination", "Halo Effect", "Leniency Error"],
+    correct: "Criterion Contamination",
+    notes: "Main Point / Explanation: Nabahiran o naimpluwensyahan ang nagbibigay ng rating dahil nalaman na nya agad ang naunang resulta ng test.\n\nExample: Bibigyan dapat ng Boss ng mababang rating ang employee, pero nalaman nyang mataas ang score nito sa IQ test kaya binigyan na lang nya ng mataas na rating."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "A correlation coefficient that shows the strength of the relationship between a test score and a criterion measure.",
+    answers: ["Validity Coefficient", "Reliability Coefficient", "Correlation Coefficient", "Predictive Index"],
+    correct: "Validity Coefficient",
+    notes: "Main Point / Explanation: Ang numero (stats) na nagpapakita kung gaano kalakas ang ugnayan sa pagitan ng test score at ng totoong resulta/criterion measure."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "The additional predictive capability contributed by a new test on top of existing tests.",
+    answers: ["Predictive Validity", "Concurrent Validity", "Construct Validity", "Incremental Validity"],
+    correct: "Incremental Validity",
+    notes: "Main Point / Explanation: Karagdagang tulong o panibagong impormasyon na maiaambag ng isang BAGONG test bukod sa mga dati nang ginagamit na tests.\n\nExample: May interview na kayo sa applicant, pero nagdagdag ka pa ng Personality Test para makakuha ng karagdagang detalye tungkol sa kanya."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "How scores on the test can be understood within some theoretical framework for understanding the construct.",
+    answers: ["Content Validity", "Criterion Validity", "Construct Validity", "Face Validity"],
+    correct: "Construct Validity",
+    notes: "Main Point / Explanation: Tinitingnan kung tumutugma ba ang test sa mga sikolohikal na TEORYA tungkol sa sinusukat na trait (halimbawa: Intelligence, Anxiety, Love, Self-esteem)."
+  },
+  {
+    type: "note",
+    category: "LESSON 07",
+    question: "Evidences of Construct Validity",
+    notes: "<b>Mga Paraan para Mapatunayan ang Construct Validity:</b>\n\n• <b>Homogeneity:</b> Nagkakaisa ang lahat ng tanong sa test at iisang trait lang ang sinusukat.\n• <b>Changes with age:</b> Nagbabago ang score ayon sa edad (halimbawa: dapat mas mataas ang bokabularyo ng 20 years old kumpara sa 5 years old).\n• <b>Pretest-posttest differences:</b> May malaking pagbabago sa score bago at pagkatapos ng therapy o intervention.\n• <b>Distinct groups:</b> Kakayahan ng test na paghiwalayin ang dalawang magkaibang grupo (halimbawa: Depressed vs. Non-depressed people)."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "Evidence shown when a test score has a HIGH correlation with other existing tests measuring the same construct.",
+    answers: ["Convergent Evidence", "Discriminant Evidence", "Incremental Validity", "Concurrent Validity"],
+    correct: "Convergent Evidence",
+    notes: "Main Point / Explanation: MATAAS ang korelasyon o pagkakapareho ng score ng bagong test mo sa iba pang subok at kilalang tests na pareho rin ng sinusukat."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "Evidence shown when a test score has LOW or NO correlation with tests measuring different, unrelated traits.",
+    answers: ["Convergent Evidence", "Discriminant Evidence", "Incremental Validity", "Concurrent Validity"],
+    correct: "Discriminant Evidence",
+    notes: "Main Point / Explanation: MABABA o WALANG ugnayan ang test mo sa mga ibang tests na IBA naman ang sinusukat na trait.\n\nExample: Ang Depression Test mo ay dapat WALANG kaugnayan sa isang Math Skills Test."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "Refers to whether a test appears to be valid at first glance or face value to the test taker.",
+    answers: ["Ecological Validity", "Content Validity", "Construct Validity", "Face Validity"],
+    correct: "Face Validity",
+    notes: "Main Point / Explanation: Mismong sa UNANG TINGIN pa lang ng kukuha ng test, mukha na ba itong seryoso at mukhang valid?\n\nExample: Kung Job Application para sa Accountant, dapat mukhang mga pang-Accounting talaga ang tanong at hindi pang-Chef."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "How well a test predicts or reflects real-life human behavior in real-life settings.",
+    answers: ["Ecological Validity", "Face Validity", "Predictive Validity", "Concurrent Validity"],
+    correct: "Ecological Validity",
+    notes: "Main Point / Explanation: Gaano ka-akma ang resulta ng test sa TOTOONG BUHAY o sa araw-araw na kapaligiran ng tao."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "Systematic factors that prevent accurate and unbiased measurement during testing.",
+    answers: ["Rating Errors", "Criterion Contamination", "Test Bias", "Measurement Error"],
+    correct: "Test Bias",
+    notes: "Main Point / Explanation: May mga hindi patas o may-pinapanigang dahilan (bias) sa mismong test kaya hindi nagiging tumpak ang pagsukat sa ilang grupo ng tao."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "A rating error where the evaluator tends to be overly generous and gives high scores.",
+    answers: ["Severity Error", "Leniency Error", "Central Tendency Error", "Halo Effect"],
+    correct: "Leniency Error",
+    notes: "Main Point / Explanation: Sobrang bait o galante ng teacher/rater kaya halos LAHAT binibigyan ng matataas na score kahit di naman karapat-dapat."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "A rating error where the evaluator is overly strict and gives consistently low scores.",
+    answers: ["Leniency Error", "Central Tendency Error", "Halo Effect", "Severity Error"],
+    correct: "Severity Error",
+    notes: "Main Point / Explanation: Sobrang higpit o kuripot ng rater kaya MABABABA ang binibigay na grade sa lahat ng tao."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "A rating error where the evaluator avoids giving extreme high or low scores and rates everyone near the middle.",
+    answers: ["Leniency Error", "Central Tendency Error", "Severity Error", "Halo Effect"],
+    correct: "Central Tendency Error",
+    notes: "Main Point / Explanation: Ayaw ng rater magbigay ng sobrang taas o sobrang baba, kaya LAHAT ng tao ay binibigyan na lang nya ng AVERAGE o gitnang score."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 07",
+    question: "Allowing one positive or desirable characteristic of a person to favorably influence the overall rating.",
+    answers: ["Horn Effect", "Leniency Error", "Halo Effect", "Central Tendency Error"],
+    correct: "Halo Effect",
+    notes: "Main Point / Explanation: Dahil lang MAY ISANG MAGANDANG Katangian ang tao (halimbawa: napakapogi o napakasipag), binigyan na sya ng mataas na score sa LAHAT ng iba pang kategorya."
+  },
+  {
+    type: "note",
+    category: "LESSON 08",
+    question: "Test Utility Concepts",
+    notes: "Utility = Praktikal na halaga, pakinabang, o sulat ng isang test sa paggawa ng desisyon.\n\n• 3 Main Factors: Psychometric Soundness, Costs, Benefits.\n• Selection Models: Multiple Hurdles vs. Compensatory Model.\n• Decision Tables: Expectancy, Taylor-Russell, at Naylor-Shine Tables."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "Refers to the usefulness or practical value of testing to improve efficiency.",
+    answers: ["Reliability", "Utility", "Validity", "Standardization"],
+    correct: "Utility",
+    notes: "Main Point / Explanation: Hindi sapat na maganda o valid lang ang test. Ang Utility ay tungkol sa kung SULIT, PRAKTIKAL, at NAKAKATULONG ba talaga ang test sa paggawa ng mas magandang desisyon habang nakakatipid sa oras at pera.\n\nExample: Mura ang test pero hindi nakakatulong sa pagpili ng magaling na employee = Mababa ang Utility."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "Which of the following is NOT one of the main factors affecting test utility?",
+    answers: ["Costs", "Benefits", "Psychometric Soundness", "Face Validity"],
+    correct: "Face Validity",
+    notes: "Main Point / Explanation: Ang tatlong pangunahing salik ng Utility ay:\n\n1. Psychometric Soundness (reliability at validity)\n2. Costs (gastos sa pagbili, pag-administer, at pag-score)\n3. Benefits (pakinabang sa hiring at job performance)\n\nAng Face Validity ay hindi kasama sa mga pangunahing salik ng Utility Analysis."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A cost-benefit analysis used to determine the practical value of an assessment tool.",
+    answers: ["Item Analysis", "Utility Analysis", "Factor Analysis", "Reliability Analysis"],
+    correct: "Utility Analysis",
+    notes: "Main Point / Explanation: Ito ang mismong pagtitimbang o pag-aaral kung mas malaki ba ang nakukuhang pakinabang kumpara sa perang ginagastos sa pagpapatakbo ng test."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "An estimate of the likelihood that an individual with a particular test score will succeed on a criterion measure.",
+    answers: ["Top-down Selection", "Expectancy Data", "Cut Score", "Base Rate"],
+    correct: "Expectancy Data",
+    notes: "Main Point / Explanation: Ito ang pagtatantya sa tsansa o posibilidad na magiging matagumpay ang isang tao sa trabaho o pag-aaral batay sa nakuha niyang test score."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A selection method where applicants are chosen starting from the HIGHEST score downwards until all available positions are filled.",
+    answers: ["Compensatory Model", "Multiple Hurdles", "Top-down Selection", "Known-Groups Method"],
+    correct: "Top-down Selection",
+    notes: "Main Point / Explanation: Inililista ang scores mula sa pinakamataas pababa (halimbawa: Rank 1, Rank 2, Rank 3...) at kinukuha sila ayon sa pagkakasunod-sunod hanggang sa mapuno ang slots.\n\nExample: Kung 3 lang ang kailangan, ang top 3 highest scorers lang ang kukunin."
+  },
+  {
+    type: "note",
+    category: "LESSON 08",
+    question: "Utility Tables Comparison",
+    notes: "Mga Talahanayan sa Utility Analysis:\n\n• Expectancy Table: Probability o tsansa ng tagumpay ng ISANG TAO batay sa kanyang test score.\n• Taylor-Russell Table: Inaasahang pagtaas sa HIRING SUCCESS RATE ng buong kumpanya.\n• Naylor-Shine Table: Inaasahang AVERAGE INCREASE sa job performance ng mga ma-o-organisa o ma-ha-hire."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "Which table shows the percentage or probability of success of an individual based on their test score?",
+    answers: ["Expectancy Table", "Taylor-Russell Table", "Naylor-Shine Table", "Norm Table"],
+    correct: "Expectancy Table",
+    notes: "Main Point / Explanation: Isang simpleng talahanayan na nagpapakita ng porsyento o tsansa na magtatagumpay ang isang indibidwal depende sa kanyang nakuha na score."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "Which table estimates the increase in hiring success when a specific test is used?",
+    answers: ["Expectancy Table", "Naylor-Shine Table", "Taylor-Russell Table", "Norm Table"],
+    correct: "Taylor-Russell Table",
+    notes: "Main Point / Explanation: Ginagamit ang talahanayang ito para tantyahin kung gaano tataas ang porsyento ng magagaling na maa-hire kapag ginamit ang isang partikular na test.\n\nKailangan dito ang: Validity Coefficient, Selection Ratio, at Base Rate."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "Which table estimates the average increase in job performance when a test is utilized?",
+    answers: ["Taylor-Russell Table", "Naylor-Shine Table", "Expectancy Table", "Norm Table"],
+    correct: "Naylor-Shine Table",
+    notes: "Main Point / Explanation: Nakatutok ito sa pagsukat kung gaano tataas ang AVERAGE JOB PERFORMANCE ng mga ma-o-organisa o ma-ha-hire kapag ginamit ang test."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A mathematical formula used to calculate the monetary value or financial gain obtained from using a psychological test.",
+    answers: ["Cronbach's Alpha Formula", "Spearman-Brown Formula", "Brogden-Cronbach-Gleser Formula", "Kuder-Richardson Formula"],
+    correct: "Brogden-Cronbach-Gleser Formula",
+    notes: "Main Point / Explanation: Pormulang ginagamit sa pera (monetary value)—itinutuos nito kung magkano mismong halaga sa piso o dolyar ang kikitain o matitipid ng kumpanya dahil sa paggamit ng testing."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A reference point used to categorize test data, such as determining who passes or fails.",
+    answers: ["Cut Score", "Base Rate", "Validity Coefficient", "Norm Score"],
+    correct: "Cut Score",
+    notes: "Main Point / Explanation: Ito ang 'linya' o 'pader' na naghihiwalay sa mga nakapasa kumpara sa mga bumagsak.\n\nExample: Ang 75% passing grade sa Board Exam ay isang Cut Score."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A type of cut score set based on the norm or performance of the group, dividing data relative to others' rankings.",
+    answers: ["Fixed Cut Score", "Relative Cut Score", "Multiple Cut Scores", "Compensatory Cut Score"],
+    correct: "Relative Cut Score",
+    notes: "Main Point / Explanation: Nakadepende sa performance ng ibang kumuha ng test.\n\nExample: Ang top 10% lang ng buong batch ang makakapasok sa scholarship, kahit ano pa ang mismong raw scores nila."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A type of cut score based on a minimum level of proficiency required, regardless of how other examinees perform.",
+    answers: ["Relative Cut Score", "Multiple Cut Scores", "Fixed Cut Score", "Norm-referenced Cut Score"],
+    correct: "Fixed Cut Score",
+    notes: "Main Point / Explanation: May nakatakdang minimum competency level na dapat maabot. Walang pakialam kung mataas o mababa ang score ng iba—basta hindi ka umabot sa fixed grade (hal. 80 points), bagsak ka."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "Using two or more cut scores to categorize examinees into multiple levels such as Basic, Proficient, and Advanced.",
+    answers: ["Relative Cut Score", "Fixed Cut Score", "Multiple Cut Scores", "Multiple Hurdles"],
+    correct: "Multiple Cut Scores",
+    notes: "Main Point / Explanation: Gumagamit ng higit sa isang cut score para hatiin ang mga kumuha sa iba't ibang lebel.\n\nExample: Below Average (0-50), Average (51-80), at Above Average (81-100)."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A selection decision model where an applicant must pass a cut score at each stage of testing before moving to the next.",
+    answers: ["Compensatory Model", "Multiple Hurdles", "Top-down Selection", "Bookmark Method"],
+    correct: "Multiple Hurdles",
+    notes: "Main Point / Explanation: Parang 'obstacle race'. Kailangan mo munang pumasa sa Stage 1 (hal. Written Exam) bago ka makatuntong sa Stage 2 (hal. Interview). Kapag bumagsak ka sa Stage 1, eliminated ka na agad."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A selection decision model where high performance in one area can offset or make up for low performance in another area.",
+    answers: ["Multiple Hurdles", "Top-down Selection", "Compensatory Model", "Known-Groups Method"],
+    correct: "Compensatory Model",
+    notes: "Main Point / Explanation: 'Bawi-bawi system'. Pinapayagan na ang mataas mong score sa isang kategorya (halimbawa: Math) ay bumawi sa mababa mong score sa ibang kategorya (halimbawa: English) para makapasa pa rin sa kabuuan."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A method for setting cut scores where experts estimate the probability that a minimally competent person will answer each item correctly.",
+    answers: ["Bookmark Method", "Angoff Method", "Known-Groups Method", "Method of Predictive Yield"],
+    correct: "Angoff Method",
+    notes: "Main Point / Explanation: Ang mga experts o judges ay titingin sa bawat tanong sa test at magtatantya kung gaano kalaki ang tsansa na masagot ito nang tama ng isang taong 'sakto lang' ang galing (minimally competent)."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A method for setting cut scores that uses data from two distinct groups: one known to possess the trait/skill and one known to lack it.",
+    answers: ["Angoff Method", "Bookmark Method", "Known-Groups Method", "Method of Predictive Yield"],
+    correct: "Known-Groups Method",
+    notes: "Main Point / Explanation: Nagpapatest sa dalawang kilalang magkaibang grupo (halimbawa: Professional Pilots vs. Novice/Beginners) at tinitingnan kung saan maghihiwalay ang scores nila para doon ilagay ang cut score."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A method for setting cut scores where experts place a physical marker in a test booklet arranged by item difficulty to mark minimal competency.",
+    answers: ["Angoff Method", "Known-Groups Method", "Bookmark Method", "Method of Predictive Yield"],
+    correct: "Bookmark Method",
+    notes: "Main Point / Explanation: Nakaayos ang mga tanong sa test booklet mula sa pinakamadali hanggang sa pinakamahirap. Maglalagay ng tunay na 'bookmark' ang mga eksperto kung hanggang aling tanong ang dapat kayang sagutin ng isang minimally competent person."
+  },
+  {
+    type: "quiz",
+    category: "LESSON 08",
+    question: "A method for setting cut scores based on the number of available positions and the expected number of applicants.",
+    answers: ["Method of Predictive Yield", "Bookmark Method", "Angoff Method", "Known-Groups Method"],
+    correct: "Method of Predictive Yield",
+    notes: "Main Point / Explanation: Isinasaalang-alang ang dami ng bakanteng trabaho (quota). Kung 10 lang ang kailangan pero 1000 ang nag-apply, itataas ang cut score para makuha lang ang kailangang bilang ng tao."
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let streak = 0;
+let isMuted = false;
+let quizData = [];
+let currentNotes = "";
+let wrongQuestions = [];
+let bookmarkedQuestions = [];
+let userAnswers = {};
+let categoryStats = {};
+let currentReviewMode = 'answers';
+
+let currentFontSize = "100%";
+let currentFontFamily = "'Poppins', sans-serif";
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function populateCategories() {
+    const categorySelect = document.getElementById("categorySelect");
+    const categories = ["All", ...new Set(questions.map(q => q.category).filter(Boolean))];
+    
+    categorySelect.innerHTML = "";
+    categories.forEach(cat => {
+        let opt = document.createElement("option");
+        opt.value = cat;
+        opt.textContent = cat === "All" ? "All Categories" : cat;
+        categorySelect.appendChild(opt);
+    });
+}
+
+populateCategories();
+loadSettings();
+checkSavedProgress();
+
+function openSettingsModal() {
+    document.getElementById("settingsModal").classList.remove("hidden");
+}
+
+function closeSettingsModal() {
+    document.getElementById("settingsModal").classList.add("hidden");
+}
+
+function changeFontSize(size) {
+    currentFontSize = size;
+    document.documentElement.style.setProperty('--base-font-scale', size);
+    saveSettings();
+}
+
+function changeFontFamily(family) {
+    currentFontFamily = family;
+    document.documentElement.style.setProperty('--app-font', family);
+    saveSettings();
+}
+
+function toggleSound() {
+    isMuted = !isMuted;
+    updateSoundUI();
+    saveSettings();
+}
+
+function updateSoundUI() {
+    const statusText = document.getElementById("soundStatusText");
+    if(statusText) {
+        statusText.textContent = isMuted ? "OFF 🔇" : "ON 🔊";
+    }
+}
+
+function saveSettings() {
+    const settings = {
+        fontSize: currentFontSize,
+        fontFamily: currentFontFamily,
+        isMuted: isMuted
+    };
+    localStorage.setItem("quizSettings", JSON.stringify(settings));
+}
+
+function loadSettings() {
+    const saved = localStorage.getItem("quizSettings");
+    if (saved) {
+        const settings = JSON.parse(saved);
+        if (settings.fontSize) {
+            currentFontSize = settings.fontSize;
+            document.getElementById("fontSizeSelect").value = currentFontSize;
+            document.documentElement.style.setProperty('--base-font-scale', currentFontSize);
+        }
+        if (settings.fontFamily) {
+            currentFontFamily = settings.fontFamily;
+            document.getElementById("fontFamilySelect").value = currentFontFamily;
+            document.documentElement.style.setProperty('--app-font', currentFontFamily);
+        }
+        if (settings.isMuted !== undefined) {
+            isMuted = settings.isMuted;
+            updateSoundUI();
+        }
+    }
+}
+
+function goHome() {
+    if (quizData.length > 0 && currentQuestion < quizData.length) {
+        saveProgress();
+    }
+    document.getElementById("quizScreen").classList.add("hidden");
+    document.getElementById("notesScreen").classList.add("hidden");
+    document.getElementById("scoreScreen").classList.add("hidden");
+    document.getElementById("detailedReviewScreen").classList.add("hidden");
+    document.getElementById("startScreen").classList.remove("hidden");
+    checkSavedProgress();
+}
+
+function saveProgress() {
+    const state = {
+        quizData,
+        currentQuestion,
+        score,
+        streak,
+        userAnswers,
+        categoryStats,
+        wrongQuestions,
+        bookmarkedQuestions
+    };
+    localStorage.setItem("quizProgress", JSON.stringify(state));
+}
+
+function checkSavedProgress() {
+    const saved = localStorage.getItem("quizProgress");
+    if (saved) {
+        document.getElementById("resumeBtn").classList.remove("hidden");
+    } else {
+        document.getElementById("resumeBtn").classList.add("hidden");
+    }
+}
+
+function resumeQuiz() {
+    const saved = localStorage.getItem("quizProgress");
+    if (!saved) return;
+
+    const state = JSON.parse(saved);
+    quizData = state.quizData;
+    currentQuestion = state.currentQuestion;
+    score = state.score;
+    streak = state.streak;
+    userAnswers = state.userAnswers;
+    categoryStats = state.categoryStats;
+    wrongQuestions = state.wrongQuestions;
+    bookmarkedQuestions = state.bookmarkedQuestions;
+
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("scoreScreen").classList.add("hidden");
+    document.getElementById("notesScreen").classList.add("hidden");
+    document.getElementById("detailedReviewScreen").classList.add("hidden");
+    document.getElementById("quizScreen").classList.remove("hidden");
+
+    updateStreakDisplay();
+    loadQuestion();
+}
+
+function clearSavedProgress() {
+    localStorage.removeItem("quizProgress");
+    document.getElementById("resumeBtn").classList.add("hidden");
+}
+
+function restartQuiz() {
+    clearSavedProgress();
+    startQuiz(false);
+}
+
+function toggleBookmark() {
+    let q = quizData[currentQuestion];
+    if (q.type === "note") return; // Prevent bookmarking note screens
+    
+    const index = bookmarkedQuestions.findIndex(item => item.question === q.question);
+    const btn = document.getElementById("bookmarkBtn");
+
+    if (index > -1) {
+        bookmarkedQuestions.splice(index, 1);
+        btn.classList.remove("bookmarked");
+        btn.textContent = "📍";
+    } else {
+        bookmarkedQuestions.push(q);
+        btn.classList.add("bookmarked");
+        btn.textContent = "📌";
+    }
+    saveProgress();
+}
+
+function updateBookmarkIcon() {
+    let q = quizData[currentQuestion];
+    const btn = document.getElementById("bookmarkBtn");
+    
+    if (q.type === "note") {
+        btn.classList.add("hidden");
+        return;
+    } else {
+        btn.classList.remove("hidden");
+    }
+
+    const isBookmarked = bookmarkedQuestions.some(item => item.question === q.question);
+    
+    if (isBookmarked) {
+        btn.classList.add("bookmarked");
+        btn.textContent = "📌";
+    } else {
+        btn.classList.remove("bookmarked");
+        btn.textContent = "📍";
+    }
+}
+
+function playSound(type) {
+    if (isMuted) return;
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    if (type === 'correct') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.35);
+    } else if (type === 'wrong') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(110, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.3);
+    }
+}
+
+function triggerConfetti() {
+    if (typeof confetti === 'function') {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    }
+}
+
+function shuffle(array){
+    for(let i=array.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [array[i],array[j]]=[array[j],array[i]];
+    }
+}
+
+function startQuiz(randomize){
+    clearSavedProgress();
+    const selectedCategory = document.getElementById("categorySelect").value;
+
+    let filteredQuestions = questions;
+
+    if (selectedCategory !== "All") {
+        filteredQuestions = questions.filter(q => q.category === selectedCategory);
+    }
+
+    if (filteredQuestions.length === 0) {
+        alert("No questions found!");
+        return;
+    }
+
+    quizData = JSON.parse(JSON.stringify(filteredQuestions));
+    quizData.forEach(q => delete q.answered);
+
+    if(randomize){
+        shuffle(quizData);
+    }
+
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("scoreScreen").classList.add("hidden");
+    document.getElementById("detailedReviewScreen").classList.add("hidden");
+    document.getElementById("quizScreen").classList.remove("hidden");
+
+    currentQuestion = 0;
+    score = 0;
+    streak = 0;
+    categoryStats = {};
+    updateStreakDisplay();
+
+    wrongQuestions = [];
+    userAnswers = {};
+
+    saveProgress();
+    loadQuestion();
+}
+
+function updateStreakDisplay() {
+    const badge = document.getElementById("streakBadge");
+    if (streak >= 2) {
+        badge.textContent = `🔥 ${streak} in a row!`;
+        badge.classList.remove("hidden");
+    } else {
+        badge.classList.add("hidden");
+    }
+}
+
+function updateProgressBar() {
+    const totalQuizQuestions = quizData.filter(item => item.type !== "note").length;
+    let completedQuizQuestions = 0;
+
+    for (let i = 0; i <= currentQuestion; i++) {
+        if (quizData[i].type !== "note" && (quizData[i].answered || userAnswers[i] !== undefined || i < currentQuestion)) {
+            completedQuizQuestions++;
+        }
+    }
+
+    const percentage = totalQuizQuestions > 0 ? Math.min(100, (completedQuizQuestions / totalQuizQuestions) * 100) : 0;
+    document.getElementById("progressFill").style.width = `${percentage}%`;
+}
+
+function loadQuestion(){
+    updateProgressBar();
+    updateBookmarkIcon();
+
+    document.getElementById("notesBtn").classList.add("hidden");
+    document.getElementById("nextBtn").classList.add("hidden");
+    
+    if(currentQuestion > 0) {
+        document.getElementById("prevBtn").classList.remove("hidden");
+    } else {
+        document.getElementById("prevBtn").classList.add("hidden");
+    }
+
+    let q = quizData[currentQuestion];
+    let contentArea = document.getElementById("quizContentArea");
+
+    if (q.type === "note") {
+        let noteIndex = 0;
+        let totalNotesCount = 0;
+        for(let i = 0; i <= currentQuestion; i++) {
+            if(quizData[i].type === "note") {
+                if(i === currentQuestion) {
+                    noteIndex = ++totalNotesCount;
+                } else {
+                    totalNotesCount++;
+                }
+            }
+        }
+        let totalRealNotes = quizData.filter(item => item.type === "note").length;
+
+        document.getElementById("questionNumber").textContent = `Review Note (${noteIndex} of ${totalRealNotes})`;
+
+        contentArea.innerHTML = `
+            <div class="pure-note-card">
+                <div class="pure-note-title">${q.question}</div>
+                <div class="pure-note-content">${q.notes}</div>
+            </div>
+        `;
+
+        document.getElementById("nextBtn").classList.remove("hidden");
+        document.getElementById("nextBtn").textContent = currentQuestion === quizData.length - 1 ? "Finish Review ►" : "Next ►";
+
+    } else {
+        let quizIndex = 0;
+        let totalQuizCount = 0;
+        for(let i = 0; i <= currentQuestion; i++) {
+            if(quizData[i].type !== "note") {
+                if(i === currentQuestion) {
+                    quizIndex = ++totalQuizCount;
+                } else {
+                    totalQuizCount++;
+                }
+            }
+        }
+        
+        let totalRealQuizQuestions = quizData.filter(item => item.type !== "note").length;
+
+        document.getElementById("questionNumber").textContent =
+        `Question ${quizIndex} of ${totalRealQuizQuestions}`;
+
+        contentArea.innerHTML = `
+            <h2 id="questionText">${q.question}</h2>
+            <div id="answers"></div>
+        `;
+
+        let answersDiv = document.getElementById("answers");
+
+        q.answers.forEach(answer=>{
+            let btn = document.createElement("button");
+            btn.type = "button";
+            btn.classList.add("answer");
+            btn.textContent = answer;
+
+            btn.onclick = function(){
+                selectAnswer(answer, q);
+            };
+
+            answersDiv.appendChild(btn);
+        });
+
+        if(userAnswers[currentQuestion] !== undefined) {
+            let savedAnswer = userAnswers[currentQuestion];
+            highlightAnswers(savedAnswer, q, true);
+        }
+    }
+}
+
+function selectAnswer(selectedAnswer, q) {
+    const isFirstTime = !q.answered;
+    userAnswers[currentQuestion] = selectedAnswer;
+
+    const cat = q.category || "General";
+    if (!categoryStats[cat]) {
+        categoryStats[cat] = { correct: 0, total: 0 };
+    }
+
+    if(selectedAnswer === q.correct){
+        if(isFirstTime) {
+            score++;
+            q.answered = true;
+            streak++;
+            categoryStats[cat].correct++;
+            categoryStats[cat].total++;
+            playSound('correct');
+        }
+    } else {
+        if(isFirstTime) {
+            q.answered = true;
+            streak = 0;
+            categoryStats[cat].total++;
+            playSound('wrong');
+            if(!wrongQuestions.some(item => item.question === q.question)){
+                wrongQuestions.push(q);
+            }
+        }
+    }
+
+    updateStreakDisplay();
+    updateProgressBar();
+    highlightAnswers(selectedAnswer, q, false);
+    saveProgress();
+}
+
+function highlightAnswers(selectedAnswer, q, isReview) {
+    let allButtons = document.querySelectorAll(".answer");
+
+    allButtons.forEach(b => {
+        b.disabled = true;
+
+        if(b.textContent === q.correct) {
+            if(selectedAnswer === q.correct) {
+                b.classList.add("correct");
+            } else {
+                b.classList.add("correct-answer");
+            }
+        }
+        
+        if(b.textContent === selectedAnswer && selectedAnswer !== q.correct) {
+            b.classList.add("wrong");
+        }
+    });
+
+    currentNotes = q.notes;
+    document.getElementById("notesBtn").classList.remove("hidden");
+    document.getElementById("notesBtn").onclick = function(){
+        showNotes();
+    };
+
+    let isLastQuestion = currentQuestion === quizData.length - 1;
+
+    document.getElementById("nextBtn").classList.remove("hidden");
+    document.getElementById("nextBtn").textContent = isLastQuestion ? "Finish Quiz ►" : "Next Question ►";
+}
+
+function prevQuestion() {
+    if(currentQuestion > 0) {
+        currentQuestion--;
+        saveProgress();
+        loadQuestion();
+    }
+}
+
+function showNotes(){
+    document.getElementById("quizScreen").classList.add("hidden");
+    document.getElementById("notesScreen").classList.remove("hidden");
+    document.getElementById("notesBox").textContent = currentNotes;
+}
+
+function backToQuestion(){
+    document.getElementById("notesScreen").classList.add("hidden");
+    document.getElementById("quizScreen").classList.remove("hidden");
+}
+
+document.getElementById("nextBtn").onclick = function(){
+    currentQuestion++;
+    saveProgress();
+    if(currentQuestion < quizData.length){
+        loadQuestion();
+    }else{
+        showScore();
+    }
+};
+
+function showScore(){
+    clearSavedProgress(); 
+    
+    document.getElementById("quizScreen").classList.add("hidden");
+    document.getElementById("scoreScreen").classList.remove("hidden");
+
+    const totalQuizQuestions = quizData.filter(q => q.type !== "note").length;
+    const totalNotesCount = quizData.filter(q => q.type === "note").length;
+    const retakeBtn = document.getElementById("retakeAllBtn");
+
+    if (totalQuizQuestions === 0) {
+        document.getElementById("scoreHeaderTitle").textContent = "Notes Review Finished!";
+        document.getElementById("scoreText").innerHTML = `You have successfully completed reviewing the notes!`;
+        
+        document.getElementById("analyticsCard").classList.add("hidden");
+        document.getElementById("reviewAllAnswersBtn").classList.add("hidden");
+        
+        if (totalNotesCount > 0) {
+            document.getElementById("reviewAllNotesBtn").classList.remove("hidden");
+        } else {
+            document.getElementById("reviewAllNotesBtn").classList.add("hidden");
+        }
+
+        document.getElementById("retakeWrongBtn").classList.add("hidden");
+        document.getElementById("reviewBookmarkedBtn").classList.add("hidden");
+        
+        retakeBtn.textContent = "Re-read All Notes";
+        retakeBtn.classList.remove("hidden");
+        return;
+    }
+
+    document.getElementById("scoreHeaderTitle").textContent = "Quiz Finished!";
+    document.getElementById("analyticsCard").classList.remove("hidden");
+    document.getElementById("reviewAllAnswersBtn").classList.remove("hidden");
+    
+    if (totalNotesCount > 0) {
+        document.getElementById("reviewAllNotesBtn").classList.remove("hidden");
+    } else {
+        document.getElementById("reviewAllNotesBtn").classList.add("hidden");
+    }
+
+    retakeBtn.textContent = "Retake All Questions";
+
+    const percentage = (score / totalQuizQuestions) * 100;
+
+    if(wrongQuestions.length === 0){
+        document.getElementById("scoreText").innerHTML =
+        `Perfect Score!<br>${score} / ${totalQuizQuestions}`;
+        playSound('correct');
+        triggerConfetti();
+    } else {
+        document.getElementById("scoreText").textContent =
+        `Your Score: ${score} / ${totalQuizQuestions}`;
+        if (percentage >= 70) {
+            triggerConfetti();
+        }
+    }
+
+    const analyticsList = document.getElementById("analyticsList");
+    analyticsList.innerHTML = "";
+    for (let cat in categoryStats) {
+        let stat = categoryStats[cat];
+        let pct = Math.round((stat.correct / stat.total) * 100);
+        let status = pct >= 70 ? "🟢" : "🔴";
+        
+        let div = document.createElement("div");
+        div.className = "analytics-item";
+        div.innerHTML = `<span><strong>${cat}:</strong> ${stat.correct}/${stat.total}</span> <span>${pct}% ${status}</span>`;
+        analyticsList.appendChild(div);
+    }
+
+    if(wrongQuestions.length > 0){
+        document.getElementById("retakeWrongBtn").classList.remove("hidden");
+    } else {
+        document.getElementById("retakeWrongBtn").classList.add("hidden");
+    }
+
+    if(bookmarkedQuestions.length > 0){
+        document.getElementById("reviewBookmarkedBtn").classList.remove("hidden");
+    } else {
+        document.getElementById("reviewBookmarkedBtn").classList.add("hidden");
+    }
+}
+
+function showDetailedReview(mode) {
+    currentReviewMode = mode || 'answers';
+    document.getElementById("scoreScreen").classList.add("hidden");
+    document.getElementById("detailedReviewScreen").classList.remove("hidden");
+
+    const titleEl = document.getElementById("detailedReviewTitle");
+    const subtitleEl = document.getElementById("detailedReviewSubtitle");
+
+    if (currentReviewMode === 'notes') {
+        titleEl.textContent = "All Notes & Explanations";
+        subtitleEl.textContent = "Review all the stand-alone notes and key takeaways:";
+    } else {
+        titleEl.textContent = "Detailed Review";
+        subtitleEl.textContent = "Review your answers and detailed notes for each question:";
+    }
+
+    const filterSelect = document.getElementById("reviewCategoryFilter");
+    
+    let availableCategories = quizData;
+    if (currentReviewMode === 'notes') {
+        availableCategories = quizData.filter(q => q.type === "note");
+    }
+    
+    const categories = ["All", ...new Set(availableCategories.map(q => q.category).filter(Boolean))];
+    
+    filterSelect.innerHTML = "";
+    categories.forEach(cat => {
+        let opt = document.createElement("option");
+        opt.value = cat;
+        opt.textContent = cat === "All" ? "All Categories" : cat;
+        filterSelect.appendChild(opt);
+    });
+
+    renderDetailedReviewCards();
+}
+
+function renderDetailedReviewCards() {
+    const container = document.getElementById("detailedReviewContainer");
+    container.innerHTML = "";
+
+    const selectedCategory = document.getElementById("reviewCategoryFilter").value;
+    let reviewItemCount = 0;
+
+    quizData.forEach((q, index) => {
+        if (selectedCategory !== "All" && q.category !== selectedCategory) {
+            return;
+        }
+
+        if (currentReviewMode === 'notes') {
+            if (q.type !== "note") return;
+            reviewItemCount++;
+            const card = document.createElement("div");
+            card.className = "review-card";
+            card.innerHTML = `
+                <div class="review-card-header">
+                    <span style="font-weight: 700; color: #38bdf8;">Note #${reviewItemCount}</span>
+                </div>
+                <div class="review-q-text">${q.question}</div>
+                <div class="review-notes" style="border-left-color: #38bdf8; margin-top: 0;">${q.notes}</div>
+            `;
+            container.appendChild(card);
+        } else {
+            if (q.type === "note") return;
+
+            reviewItemCount++;
+            const userAns = userAnswers[index];
+            const isCorrect = userAns === q.correct;
+            const statusBadge = isCorrect ? "🟢 Correct" : "🔴 Incorrect";
+            
+            const card = document.createElement("div");
+            card.className = "review-card";
+            card.innerHTML = `
+                <div class="review-card-header">
+                    <span style="font-weight: 700;">Q${reviewItemCount}</span>
+                    <span>${statusBadge}</span>
+                </div>
+                <div class="review-q-text">${q.question}</div>
+                <div class="review-ans-row" style="color: ${isCorrect ? '#4ade80' : '#f87171'};">
+                    <strong>Your Answer:</strong> ${userAns || "No answer"}
+                </div>
+                ${!isCorrect ? `<div class="review-ans-row" style="color: #4ade80;"><strong>Correct Answer:</strong> ${q.correct}</div>` : ''}
+                ${q.notes ? `<div class="review-notes"><strong>Notes:</strong> ${q.notes}</div>` : ''}
+            `;
+            container.appendChild(card);
+        }
+    });
+}
+
+function backToScoreScreen() {
+    document.getElementById("detailedReviewScreen").classList.add("hidden");
+    document.getElementById("scoreScreen").classList.remove("hidden");
+}
+
+function retakeWrongQuestions(){
+    clearSavedProgress();
+    quizData = JSON.parse(JSON.stringify(wrongQuestions));
+    quizData.forEach(q => delete q.answered);
+
+    wrongQuestions = [];
+    userAnswers = {};
+    categoryStats = {};
+    currentQuestion = 0;
+    score = 0;
+    streak = 0;
+    updateStreakDisplay();
+
+    document.getElementById("scoreScreen").classList.add("hidden");
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("quizScreen").classList.remove("hidden");
+    
+    saveProgress();
+    loadQuestion();
+}
+
+function reviewBookmarkedQuestions(){
+    clearSavedProgress();
+    quizData = JSON.parse(JSON.stringify(bookmarkedQuestions));
+    quizData.forEach(q => delete q.answered);
+
+    wrongQuestions = [];
+    userAnswers = {};
+    categoryStats = {};
+    currentQuestion = 0;
+    score = 0;
+    streak = 0;
+    updateStreakDisplay();
+
+    document.getElementById("scoreScreen").classList.add("hidden");
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("quizScreen").classList.remove("hidden");
+    
+    saveProgress();
+    loadQuestion();
+}
+
+</script>
+
+</body>
+</html>
